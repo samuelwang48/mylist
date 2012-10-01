@@ -1,0 +1,60 @@
+<%= @html_contactsNav %>
+<div class="contactsCon">
+	
+	<div>
+		<table class="list">
+			<tr class="operators">
+			  <td colspan="7" style="padding-top:10px;">
+			  	<div class="bulk_chk">
+				  	<div class="bulk_chk_border"><input type="checkbox" onclick="return false;" /></div>
+				  	<div class="bulk_chk_check"><input type="checkbox" id="bulk_chk_o" /></div>
+					</div>
+			    <div class="itododropdown" style="margin:-6px 0 0 10px; float:left;">
+			      <ul>
+			        <li><button type="button" class="itododropdown_outer">Bulk Action 
+							<div class="contacts_btn_arw"></div></button>
+							<ul class="dropdown" style="margin-top:-2px; padding:0px; width:150px;">
+                <li class="action_group">Action</li>
+                <li><a href="javascript:void(0)" onclick="$this.bulkInvite()">Invite</a></li>
+			          <li><a href="javascript:void(0)" onclick="$this.bulkDelete()">Delete Contacts</a></li>
+                <li class="action_group">Grouping</li>
+			          <% @user_contact_groups.each {|g| %>
+			          <li>
+			            <a href="javascript:void(0)" onclick="$this.bulkGrouping('<%= g.id %>')"><%=h g.name %></a>
+			          </li>
+			          <% } %>
+			        </ul></li>
+			      </ul>
+			    </div>
+          <div class="itododropdown" style="margin:-6px 0 0 10px; float:left;">
+            <ul>
+            	<% if @current_group.nil? %>
+							<li><button type="button" class="itododropdown_outer button_disabled" id="current_contact_group" _gid="0" style="cursor:default" disabled>Group : My Contacts <div class="contacts_btn_arw"></div></button>
+							<% else %>
+              <li><button type="button" class="itododropdown_outer" id="current_contact_group" _gid="<%=h @current_group.id %>">Group : <%=h @current_group.name %> <div class="contacts_btn_arw"></div></button>
+							<% end %>
+              <ul class="dropdown" style="margin-top:-2px; padding:0px; width:150px;">
+                <li><a href="javascript:void(0)" onclick="$this.renameGroup(this)">Rename</a></li>
+                <li><a href="javascript:void(0)" onclick="$this.deleteGroup()">Delete</a></li>
+              </ul></li>
+            </ul>
+          </div>
+					<div class="contact_filter">
+            <input id="filterText" onkeyup="$this.filterByText(this.value)" type="text" style="width:113px; border:1px solid #ccc; border-top:1px solid #777; border-left:1px solid #777; margin-bottom:7px; margin-top:5px; padding:1px 13px 1px 13px;">
+						<div class="mag"></div>
+						<div id="clearFilterText" onclick="$('#filterText').val('').focus(); $this.filterByText(''); " class="clr"></div>
+					</div>
+
+				</td>
+			</tr>
+			<% if params[:id].nil? %>
+      <%= @html_contact_items %>
+			<% else %>
+      <%= @html_current_contact_items %>
+			<script>ITODO_CONTACT_CURRENTGROUP = <%= decode params[:id] %>;</script>
+			<% end %>
+		</table>
+	</div>
+	
+	
+</div>

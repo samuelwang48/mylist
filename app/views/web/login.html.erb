@@ -1,0 +1,41 @@
+<form action="/web/authenticate" class="new_user" id="new_user" method="post">
+<input name="authenticity_token" type="hidden" value=<%= form_authenticity_token.inspect %> />
+<h1>Sign In</h1>
+<p style="padding:5px 2px 0 2px; width:550px; font-family: Georgia, serif; font-size: 10pt; font-style: italic; ">
+  Would the world be any different if you weren’t born? Do you wake up in the morning feeling like you have an important role to play in the grand scheme of things?<br />
+</p>
+<br />
+<% if flash[:notice] %>
+<div class="error_messages">
+  <div class="i"></div>
+  <div class="m">
+    <div class="b"></div>
+    <%= flash[:notice] %> <a href="">Forgot password?</a>
+  </div>
+</div>
+<br />
+<% end %>
+
+<table>
+  <tr><td class="fieldWidth" width="70">Email</td><td><div class="fieldBorder">
+    <input class="noBorder" id="user_email" name="user[email]" size="30" type="text" value="<%=h @user ? @user.email : '' %>">
+  </div></td></tr>
+  <tr><td>Password</td><td><div class="fieldBorder">
+    <input class="noBorder" id="user_password" name="user[password]" size="30" type="password" value="">
+  </div></td></tr>
+  <tr><td></td><td>
+  	<input type="checkbox" id="remembr" name="remember_login"<%= cookies[:RL].blank? ? ' ' : ' checked ' %>style="margin:10px 5px 0 0;" />
+		<label for="remembr" style="position:relative; top:-2px;">Remember me on this computer</label></td></tr>
+  <tr><td></td><td height="5"></td></tr>
+  <tr><td></td><td>
+    <button type="submit">Sign In</button>
+  </td></tr>
+  <tr><td></td><td>&nbsp;</td></tr>
+</table>
+
+
+
+
+
+
+</form>

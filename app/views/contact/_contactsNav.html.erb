@@ -1,0 +1,9 @@
+
+<div class="contactsNav">
+  <div class="new"><button onclick="$dir('/contact/add')">New Contact</button></div>
+  <a class="g<%#= params[:id] ? '' : ' current' %>" href="/contact/home" id="chgid0">My Contacts (<span class="contact_group_count"><%= @contacts.size %></span>)</a>
+	<% @user_contact_groups.each {|g| %>
+	  <a class="g<%#= params[:id]==encode(g.id) ? ' current' : '' %>" href="/contact/home/<%=h encode(g.id) %>" id="chgid<%= g.id %>"><%=h g.name %> (<span class="contact_group_count"><%=h g.contact_groups_relations.size %></span>)</a>
+	<% } %>
+  <a href="javascript:void(0)" class="newg" onclick="$this.newGroup(this)">New Group...</a>
+</div>

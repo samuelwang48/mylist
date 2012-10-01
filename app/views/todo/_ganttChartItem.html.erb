@@ -1,0 +1,14 @@
+<%
+  bar_width = @unit_width * ganttChartItem.duration
+  if ganttChartItem.duration > 0
+  before = (ganttChartItem.start - @start)/1.day
+  bar_margin_left = before * @unit_width
+%>
+<div class="taskCon" id="taskCon_<%= ganttChartItem.id %>">
+  <div class="tbar" start="<%= ganttChartItem.start.strftime("%Y-%m-%d") %>" due="<%= ganttChartItem.due.strftime("%Y-%m-%d") %>" duration="<%= ganttChartItem.duration %>" style="width: <%= bar_width %>px; margin-left: <%= bar_margin_left %>px"></div>
+</div>
+<% else %>
+<div class="taskCon" id="taskCon_<%= ganttChartItem.id %>" style="display:none">
+  <div class="tbar" start="" due="" duration=""></div>
+</div>
+<% end %>

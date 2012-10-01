@@ -1,0 +1,24 @@
+<tr id="contact_row_id_<%=h contactItem.id %>">
+  <td class="chk" onclick="$this.chkItem(this)"><input onclick="$this.chkItem(this.parentNode); return;" type="checkbox" value="<%= encode(contactItem.id) %>" /></td>
+  <td class="fullname clk" onclick="$dir('/contact/edit/<%=encode(contactItem.id.to_s)%>')"><div class="fullname"><%= contactItem.firstname %> <%= contactItem.lastname %></div></td>
+	<% if contactItem.local_user_id > 0 %>
+	  <td class="invitecol clk" onclick="$dir('/contact/edit/<%=encode(contactItem.id.to_s)%>')" style="text-align:right; font-size:11px; color:#666; padding-right:3px;">
+	  	<%= contactItem.local.status == 0 ? 'Inactive' : 'Connected' %>
+	  </td>
+	<% else %>
+		<% if !contactItem.invitation.nil? %>
+		<td class="clk" onclick="$dir('/contact/edit/<%=encode(contactItem.id.to_s)%>')" style="text-align:right; font-size:11px; color:#666; padding-right:3px;">Invited</td>
+		<% else %>
+		<td class="clk"><button class="invite" onclick="$this.inviteContact(this)">Invite</button></td>
+		<% end %>
+	<% end %>
+	<td class="clk contact_email" onclick="$dir('/contact/edit/<%=encode(contactItem.id.to_s)%>')"><%=h contactItem.fields_for('Email').size > 0 ? contactItem.fields_for('Email')[0].value : '' %></td>
+  <td class="clk" onclick="$dir('/contact/edit/<%=encode(contactItem.id.to_s)%>')"><%=h contactItem.fields_for('Phone').size > 0 ? contactItem.fields_for('Phone')[0].value : '' %></td>
+  <td class="clk" onclick="$dir('/contact/edit/<%=encode(contactItem.id.to_s)%>')"></td>
+  <td class="clk last" onclick="$dir('/contact/edit/<%=encode(contactItem.id.to_s)%>')">
+  	<% gs = contactItem.contact_groups %>
+		<% if gs.size > 0 %>
+		<div class="gn"><%= gs.collect{|g|g.name}.join('</div><div class="gn">') %></div>
+		<% end %>
+  </td>
+</tr>

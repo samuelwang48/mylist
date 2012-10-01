@@ -1,0 +1,103 @@
+8
+
+dir
+63
+svn://itodo.it/HEAD
+svn://itodo.it
+
+
+
+2011-03-21T09:19:46.456872Z
+63
+rli
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+49bbca5f-451e-4e7f-97ed-f3b25e5ff87b
+
+.loadpath
+file
+
+
+
+
+2011-05-12T08:09:35.000000Z
+2daf40a95bbe9092d898e08edfc25eab
+2011-02-25T15:17:17.064777Z
+2
+swang
+
+.settings
+dir
+
+README
+file
+
+
+
+
+2011-05-12T08:09:32.000000Z
+a58e68a7599c976f071d5b9c6fa67fb3
+2011-02-25T15:17:17.064777Z
+2
+swang
+
+Rakefile
+file
+
+
+
+
+2011-05-12T08:09:29.000000Z
+17f2f134da4cd31ea095d5868ca89e86
+2011-02-25T15:17:17.064777Z
+2
+swang
+
+app
+dir
+
+config
+dir
+
+db
+dir
+
+doc
+dir
+
+lib
+dir
+
+log
+dir
+
+public
+dir
+
+script
+dir
+
+service
+dir
+
+test
+dir
+
+tmp
+dir
+
+vendor
+dir
+

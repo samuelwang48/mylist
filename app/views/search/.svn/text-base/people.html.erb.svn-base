@@ -1,0 +1,22 @@
+  <script type="text/javascript" src="/controllers/web.js"></script>
+	<div style="margin:20px auto; width:500px; height:70px">
+  <h1>Find People by Email</h1>
+  <table style="margin-left:-1px;">
+    <tr>
+      <td>
+        <div class="fieldBorder">
+          <input onkeydown="if(event.keyCode==13){$this.doSearchPeople()}" id="findPplInput" class="noBorder" type="text" style="width:300px; padding:1px 1px; " />
+        </div>
+      </td>
+      <td>
+        <button id="searchPeopleBtn" onclick="$this.doSearchPeople()" style="margin:0 0 0 2px; width:60px; font-size:12px; font-weight:bold;">Search</button>
+      </td>
+    </tr>
+		<tr><td colspan="2" class="error" id="searchPeopleError" style="display:none;">
+			Please revise Email format.
+		</td></tr>
+  </table>
+  </div>
+	<div class="gradientBorderBottom"></div>
+	<div class="searchPeopleResult">
+	</div>

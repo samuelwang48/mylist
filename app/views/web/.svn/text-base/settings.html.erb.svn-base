@@ -1,0 +1,258 @@
+<div class="mainContainer">
+  <h1>Account Settings</h1>
+  <div class="settings_con">
+    <div class="itodotabs">
+      <ul>
+        <li><a href="javascript:void(0)" class="current" _tab="profile">Profile</a></li>
+        <li><a href="javascript:void(0)" _tab="avatar">Change Avatar</a></li>
+        <li><a href="javascript:void(0)" _tab="password">Change Password</a></li>
+        <li><a href="javascript:void(0)" _tab="mobile">Mobile &amp; Email</a></li>
+        <li><a href="javascript:void(0)" _tab="privacy">Privacy</a></li>
+      </ul>
+    </div>
+    <div class="itodotab_content" _for="profile">
+      <div class="error_messages" style="display:none; margin-bottom:20px;">
+        <div class="i"></div>
+      </div>
+      <table>
+        <tr><td class="fieldWidth">itodo.it ID</td><td><div class="fieldBorder">
+        	<input class="noBorder" autocomplete="off" type="input" name="user[username]" value="<%= @user.username %>" /></div></td><td></td></tr>
+        <tr><td>First Name</td><td><div class="fieldBorder">
+        	<input class="noBorder" autocomplete="off" type="input" name="user[firstname]" value="<%=@user.firstname%>" /></div></td><td></td></tr>
+        <tr><td>Last Name</td><td><div class="fieldBorder">
+        	<input class="noBorder" autocomplete="off" type="input" name="user[lastname]" value="<%=@user.lastname%>"  /></div></td><td></td></tr>
+        <tr><td>Gender</td><td style="padding-top:4px;" class="radio_fields">
+        	<input type="radio" name="user[sex]" value="1" id="user_gender1" <%= @user.sex == 1 ? 'checked' : ''%> /> <label for="user_gender1">Male</label>
+                <input type="radio" name="user[sex]" value="0" id="user_gender0" <%= @user.sex == 0 ? 'checked' : ''%> /> <label for="user_gender0">Female</label>
+         	</td><td></td></tr>
+	<tr><td>Birthday (Optional)</td><td><div class="fieldBorder">
+          <input class="noBorder" type="input" id="settings_user_birthday" name="user[birthday]" value="<%= @user.birthday %> " />
+          </div><div class="caln"></div></td><td></td></tr>
+        <tr><td>URL (Optional)</td><td><div class="fieldBorder">
+        	<input class="noBorder" type="input" name="user[url]" value="<%=@user.url%>" /></div></td><td></td></tr>
+        <tr><td>Title (Optional)</td><td><div class="fieldBorder">
+        	<input class="noBorder" type="input" name="user[position]" value="<%=@user.position%>" /></div></td><td></td></tr>
+        <tr><td>Occupation (Optional)&nbsp;&nbsp;&nbsp;&nbsp;</td><td><div class="fieldBorder">
+          	<input class="noBorder" type="input" name="user[occupation]" value="<%=@user.occupation%>" /></div></td><td></td></tr>
+         <tr><td>Bio (Optional)</td><td><div class="fieldBorder">
+          	<textarea class="noBorder" name="user[bio]" style="width:300px; height:70px;"><%=h @user.bio%></textarea></div></td><td></td></tr>
+      </table>
+    </div>
+    <div class="itodotab_content" _for="avatar" style="display:none;">
+    <% form_for :image, @image, :url => { :action => "upload" }, :html => { :id => "upload_form", :method => "post", :target => "http_tunnel", :multipart => true } do |form| %>
+      <div class="error_message" style="display:none; margin-bottom: 20px;">
+        <div class="i"></div>
+      </div>
+      <div class="avatar_zone">
+        <div class="avatar_left">
+          <div class="avatar_upload">
+            <%= form.file_field :avatar %>
+          </div>
+          <div id="avatar_container">
+            <div id="avatar_box"><img id="avatar_img" src style="display:none"></img></div>
+            <table id="avatar_mask" cellpadding=0 cellspacing=0>
+              <tr><td colspan=3></td></tr>
+              <tr><td></td><td class="trans"></td><td></td></tr>
+              <tr><td colspan=3></td></tr>
+            </table>
+            <div id="avatar_slider" style="display: none"></div>
+            <div style="margin: 10px 0;">
+              <input type="hidden" value="50" id="slideVal"/>
+              <button onclick="javascript: return saveAvatar()">Submit</button>
+            </div>
+          </div>
+        </div>
+        <div class="avatar_right">
+          <img src="<%=@user.avatar_url('large')%>" id="avatar_oldimg"/>
+        </div>
+      </div>
+      <script>
+      var boxWidth = $('#avatar_box').width();
+      var oldWidth = 400;
+      var oldHeight = 400;
+      function adjustPos(){
+        var avaImg = $("#avatar_img");
+        var avaBox = $("#avatar_box");
+        console.log(avaImg.width() + "|" + avaImg.height());
+        var mt = (avaBox.height()-avaImg.height())/2;
+        avaImg.css('margin-top', mt);
+        var ml = (avaBox.width()-avaImg.width())/2;
+        avaImg.css('margin-left', ml); 
+      }
+      $(function() {
+        var picFormat = "jpg|gif|png|jpeg";
+        $('#image_avatar').change(function(){
+	  if(picFormat.indexOf($(this).val().substring($(this).val().lastIndexOf('.')+1).toLowerCase()) > -1 ){
+            $("#upload_form").attr({
+             action: '/web/upload_avatar',
+             target: 'http_tunnel'
+            }).submit();
+          }else{
+            alert('please upload an image file.');
+            return;
+          }
+        });
+        $('#avatar_slider').slider({
+          value: 50,
+          min: 10,
+          max: 100,
+          slide: function(event, ui){
+            var scale = ui.value/50.0;
+            var avaImg = $("#avatar_img");
+            var des_size = $("td.trans").width();
+            if(oldWidth*scale >= des_size && oldHeight*scale >= des_size){
+              avaImg.width(oldWidth*scale).height(oldHeight*scale);
+              $('#slideVal').val(ui.value);
+            }else{
+              if(oldWidth > oldHeight){
+                avaImg.width(oldWidth*des_size/oldHeight).height(des_size);
+                $('#slideVal').val(avaImg.width()*50/oldWidth);
+              }else{
+                avaImg.width(des_size).height(oldHeight*des_size/oldWidth);
+                $('#slideVal').val(avaImg.height()*50/oldHeight);
+              }
+            }
+            adjustPos();
+          }
+        });
+      });
+      function loadAvatar(path){
+        $("#avatar_img").attr("src",path)[0].onload = function(){
+          $("#avatar_container").show();
+          $("#avatar_img").removeAttr("style").show();
+          $("#avatar_oldimg").attr("src",path.replace('raw','large'));
+          adjustPos();
+          oldWidth = $("#avatar_img").width();
+          oldHeight = $("#avatar_img").height();
+          $('#avatar_slider').show();
+          var curX = 0;
+          var curY = 0;
+          var posLeft = 0;
+          var posTop = 0;
+          var dragflag = false;
+          $('#avatar_mask').mousedown(function(e){
+            curY = e.pageY;
+            curX = e.pageX;
+            posTop = parseInt($('#avatar_img').css('margin-top').replace('px',''));
+            posLeft = parseInt($('#avatar_img').css('margin-left').replace('px',''));
+            dragflag = true;
+            e.preventDefault();
+            $('body').addClass('moving')[0].onselectstart = function(){return false};
+          });
+          $(document).mousemove(function(e){
+            var mar_left = (boxWidth - $("td.trans").width())/2;
+            if(dragflag){
+              if(posLeft + ( e.pageX - curX ) > mar_left){
+                $('#avatar_img').css('margin-left', mar_left);
+              }else if(posLeft + ( e.pageX - curX ) < boxWidth - mar_left - $("#avatar_img").width()){
+                $('#avatar_img').css('margin-left', boxWidth - mar_left - $("#avatar_img").width());
+              }else{
+                $('#avatar_img').css('margin-left', posLeft + ( e.pageX - curX ) );
+              }
+              if(posTop + ( e.pageY - curY ) > mar_left){
+                $('#avatar_img').css('margin-top', mar_left);
+              }else if(posTop + ( e.pageY - curY ) < boxWidth - mar_left - $("#avatar_img").height()){
+                $('#avatar_img').css('margin-top', boxWidth - mar_left - $("#avatar_img").height());
+              }else{
+                $('#avatar_img').css('margin-top', posTop + ( e.pageY - curY ) );
+              }
+            }
+          }).mouseup(function(){
+            dragflag = false;
+            $('body').removeClass('moving')[0].onselectstart = function(){};
+          });
+        }
+      }
+      function saveAvatar(){
+        var leftntop = (boxWidth - $('td.trans').width())/2;
+        var params = {};
+        params.authenticity_token = AUTH_TOKEN;
+        params.scale = $('#slideVal').val();
+        params.left = leftntop - parseInt($('#avatar_img').css('margin-left'));
+        params.top = leftntop - parseInt($('#avatar_img').css('margin-top'));
+        $.ajax({
+          type: "POST",
+          url: "/web/chop_avatar",
+          data: params,
+          success: function(data){
+            $("#avatar_img").attr("src",data)[0].onload= function(){
+              $("#avatar_img").removeAttr("style");
+              adjustPos();
+              $("#avatar_oldimg").attr("src",data);
+            };
+            $('#avatar_slider').hide();
+            return false;
+          },
+          error: function(msg){
+            alert('error:' + msg);
+          }
+        }); 
+        return false;
+      }
+      </script>
+    <% end %>
+    </div>
+    <div class="itodotab_content" _for="password" style="display:none;">
+      <div class="error_messages" style="display:none; margin-bottom:20px;">
+         <div class="i"></div>
+      </div>
+      <p>Leave blank if you don't want to change your password</p>
+      <table>
+        <tr><td class="fieldWidth">Old Password</td><td><div class="fieldBorder">
+        	<input class="noBorder" autocomplete="off" name="user[password_old]" type="password" /></div></td><td></td></tr>
+        <tr><td>New Password</td><td><div class="fieldBorder">
+        	<input class="noBorder" autocomplete="off" name="user[password]" type="password" /></div></td><td></td></tr>
+        <tr><td>Confirm New Password&nbsp;&nbsp;&nbsp;&nbsp;</td><td><div class="fieldBorder">
+        	<input class="noBorder" autocomplete="off" name="user[password_confirmation]" type="password" /></div></td><td></td></tr>
+        <tr><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td></tr>
+      </table>
+    </div>			
+    <div class="itodotab_content" _for="mobile" style="display:none;">
+       <div class="error_messages" style="display:none; margin-bottom:20px;">
+          <div class="i"></div>
+       </div>
+       <p>For itodo.it SMS Reminder feature only. We will keep it private for you. </p>
+       <table>
+	      <tr><td class="fieldWidth">Mobile Phone (Optional)&nbsp;&nbsp;&nbsp;&nbsp;</td><td><div class="fieldBorder">
+	      	<input class="noBorder" style="width:23px" value="+86" disabled /></div><div class="fieldBorder">
+	        <input class="noBorder" type="input" name="user[phone_mobile]" value="<%=@user.phone_mobile%>" /></div></td><td></td></tr>
+       </table><br />
+       <p>If you forget password, you can get your account back from following email address. </p>
+       <table>
+	      <tr><td class="fieldWidth">Alternative Email (Optional)&nbsp;&nbsp;&nbsp;&nbsp;</td><td><div class="fieldBorder">
+	      	<input class="noBorder" type="input" name="user[email_alt]" value="<%=@user.email_alt%>" /></div></td><td></td></tr>
+       </table>
+     </div>
+     <div class="itodotab_content" _for="privacy" style="display:none;">
+        <div class="error_messages" style="display:none; margin-bottom:20px;">
+          <div class="i"></div>
+        </div>
+        <p>The recommended settings are "On" + "My Contacts Only"</p>
+        <table>
+          <tr><td class="fieldWidth">Show me in <a href="/search/people" target="_blank">Search People</a> result&nbsp;&nbsp;&nbsp;&nbsp;</td><td>
+            <select name="user[searchable]">
+              <option value="1" <%=@user[:searchable]?'selected':''%>>On</option>
+              <option value="0" <%=!@user[:searchable]?'selected':''%>>Off</option>
+            </select>
+          </td><td></td></tr>
+          <tr><td class="fieldWidth">My Profile is visible to</td><td>
+              <select name="user[profile_visible]">
+                <option value="1" <%=@user[:profile_visible]==1?'selected':''%>>Everyone</option>
+                <option value="2" <%=@user[:profile_visible]==2?'selected':''%>>My Contacts Only</option>
+                <option value="0" <%=@user[:profile_visible]==0?'selected':''%>>Only Me</option>
+              </select>
+           </td><td></td></tr>
+           <tr><td></td><td></td><td></td></tr>
+        </table>
+     </div>
+  </div>
+  <div style="padding:0 20px;">
+    <button class="button_save" onclick="$this.saveAccountSettings()">Save Now</button> 
+    <a href="/web/home">Cancel</a>
+  </div>
+</div>
+
+<div class="sideContainer"></div>
+

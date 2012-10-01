@@ -1,0 +1,83 @@
+      <div id="tpl_reminder" class="tpl">
+        <input id="reminder_todo_id" type="hidden" value="<%= @todo ? @todo.id : 0 %>" />
+        <div class="field">Event</div>
+        <div id="reminder_ta"></div>
+        <div class="field" style="margin-top:10px;">Preferred Method - <a href="/web/settings">Change Contact Information</a></div>
+        <div style="margin:10px 5px 5px 5px;">
+          <input type="checkbox" id="reminder_m0" /> <label for="reminder_m0">SMS +86 <%=@user.phone_mobile%></label> &nbsp;&nbsp;
+          <input type="checkbox" id="reminder_m1" /> <label for="reminder_m1">Email</label> <label><select id="reminder_m1_sel" onclick="$('#reminder_m1')[0].checked = 1"><option value="email_def"><%=@user.email%></option><option value="email_alt"><%=@user.email_alt%></option></select></label> 
+          
+        </div>
+        <div class="field">Date &amp; Time</div>
+        <div class="field" style="margin-bottom:5px;">
+          Time Zone - Beijing, Hongkong, Shanghai
+        </div>
+        <div class="field" style="height:30px;">
+          <div style="float:left">
+            <div class="fieldBorder">
+              <input class="noBorder" type="text" id="reminder_d" style="width:90px;" />
+            </div>
+            <div class="caln"></div>
+          </div>
+          <div style="float:left; margin:0 0 0 10px;">
+            <select id="reminder_t">
+              <option value="00:00">00:00</option>
+              <option value="00:30">00:30</option>
+              <option value="01:00">01:00</option>
+              <option value="01:30">01:30</option>
+              <option value="02:00">02:00</option>
+              <option value="02:30">02:30</option>
+              <option value="03:00">03:00</option>
+              <option value="03:30">03:30</option>
+              <option value="04:00">04:00</option>
+              <option value="04:30">04:30</option>
+              <option value="05:00">05:00</option>
+              <option value="05:30">05:30</option>
+              <option value="06:00">06:00</option>
+              <option value="06:30">06:30</option>
+              <option value="07:00">07:00</option>
+              <option value="07:30">07:30</option>
+              <option value="08:00">08:00</option>
+              <option value="08:30">08:30</option>
+              <option value="09:00">09:00</option>
+              <option value="09:30">09:30</option>
+              <option value="10:00">10:00</option>
+              <option value="10:30">10:30</option>
+              <option value="11:00">11:00</option>
+              <option value="11:30">11:30</option>
+              <option value="12:00">12:00</option>
+              <option value="12:30">12:30</option>
+              <option value="13:00">13:00</option>
+              <option value="13:30">13:30</option>
+              <option value="14:00">14:00</option>
+              <option value="14:30">14:30</option>
+              <option value="15:00">15:00</option>
+              <option value="15:30">15:30</option>
+              <option value="16:00">16:00</option>
+              <option value="16:30">16:30</option>
+              <option value="17:00">17:00</option>
+              <option value="17:30">17:30</option>
+              <option value="18:00">18:00</option>
+              <option value="18:30">18:30</option>
+              <option value="19:00">19:00</option>
+              <option value="19:30">19:30</option>
+              <option value="20:00">20:00</option>
+              <option value="20:30">20:30</option>
+              <option value="21:00">21:00</option>
+              <option value="21:30">21:30</option>
+              <option value="22:00">22:00</option>
+              <option value="22:30">22:30</option>
+              <option value="23:00">23:00</option>
+              <option value="23:30">23:30</option>
+            </select>
+          </div>
+          <div style="float:left; margin:0 0 0 10px;">
+            <select id="reminder_earlier"></select> before start
+          </div>
+        </div>
+        <div style="text-align:center; margin-bottom:10px;">
+          <button id="reminder_button">Set Reminder</button> 
+          <button id="del_reminder_button" style="display:none">Delete</button> 
+          <a href="javascript:void(0)" onclick="$this.win_reminder.dialog('close')">Cancel</a>
+        </div>
+      </div>

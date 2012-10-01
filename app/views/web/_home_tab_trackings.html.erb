@@ -1,0 +1,11 @@
+<% if !pending_trackings.blank? %>
+<div class="pendingTrackingCon">
+  <%= render :partial => "pending_tracking", :collection => pending_trackings %>
+</div>
+<% end %>
+<table>
+  <tbody id="moreTbody">
+    <%= render :partial => "todolist", :collection => user_trackings %>
+  </tbody>
+</table>
+<button class="showmoreresults" onclick="$this.getMoreTrackings(this)" num="1">More Trackings</button>

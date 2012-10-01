@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<% if params[:action] == 'profile' %>
+		<title><%=h @user.firstname + ' ' + @user.lastname %> on mylist</title>
+		<% else %>
+    <title><%=h @title ? @title + ' - ': '' %>mylist</title>
+		<% end %>
+		
+    <%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? %>
+		<% @minmer = nil %>
+		<% if @minmer %>
+    <link type="text/css" href="<%= ITODO_CDN_HOST %>/stylesheets/all.min.css" rel="stylesheet" media="screen"/>
+    <!--[if lt IE 7]>
+    <link href="<%= ITODO_CDN_HOST %>/stylesheets/default_ie.min.css" rel="stylesheet" type="text/css">
+    <![endif]--> 
+    <!--[if IE 7]>
+    <link href="<%= ITODO_CDN_HOST %>/stylesheets/default_ie.min.css" rel="stylesheet" type="text/css">
+    <![endif]--> 
+    <!--[if IE 8]>
+    <link href="<%= ITODO_CDN_HOST %>/stylesheets/default_ie8.min.css" rel="stylesheet" type="text/css">
+    <![endif]-->
+    <script type="text/javascript" src="<%= ITODO_CDN_HOST %>/common/runonce.min.js"></script>
+		<% else %>
+    <link type="text/css" href="<%= ITODO_CDN_HOST %>/stylesheets/jquery-ui-1.8.9.custom.css" rel="stylesheet" media="screen"/>
+    <link type="text/css" href="<%= ITODO_CDN_HOST %>/stylesheets/default.css" rel="stylesheet" media="screen"/>
+    <!--[if lt IE 7]>
+    <link href="<%= ITODO_CDN_HOST %>/stylesheets/default_ie.css" rel="stylesheet" type="text/css">
+    <![endif]--> 
+    <!--[if IE 7]>
+    <link href="<%= ITODO_CDN_HOST %>/stylesheets/default_ie.css" rel="stylesheet" type="text/css">
+    <![endif]--> 
+    <!--[if IE 8]>
+    <link href="<%= ITODO_CDN_HOST %>/stylesheets/default_ie8.css" rel="stylesheet" type="text/css">
+    <![endif]-->
+    <script type="text/javascript" src="<%= ITODO_CDN_HOST %>/common/runonce.js"></script>
+		<% end %>
+  </head>
+  <body>
+  	<div id="notifier">-</div>
+		<% if params[:controller] == 'todo' %>
+		<div id="fixedListFilter">
+	    <div class="itemViews">
+	      <% if @user_auth['w'] == true %>
+	      <a href="javascript:void(0)" onclick="$this.appendMoreItem(this)" style="font-weight:bold;">+ Append List...</a> &nbsp; 
+	      <div class="itododropdown" style="margin:0 10px -5px 10px;">
+	      <% else %>
+	      <div class="itododropdown" style="margin:0 10px -5px -3px;">
+	      <% end %> 
+	        <ul>
+	          <li>
+	            <div class="itododropdown_outer">
+	              <input autocomplete="off" id="filterText" onkeyup="$this.filterByText(this.value)" type="text" style="width:113px; border:1px solid #ccc; border-top:1px solid #777; border-left:1px solid #777; margin-bottom:0; margin-top:0; padding:1px 13px 1px 13px;" />
+	              <div class="mag"></div>
+	              <div id="clearFilterText" onclick="$('#filterText').val('').focus(); $this.filterByText(''); $this.displayItems('all'); " class="clr"></div>
+	            </div>
+	            <ul class="dropdown" style="margin-top:-1px; _margin-top:-2px;">
+	            <div style="position:absolute; font-size:9px; margin:-6px 0 0 139px; width:12px; height:12px; overflow:hidden; background:url(<%= ITODO_CDN_HOST %>/images/a.gif) -35px -211px no-repeat; cursor:pointer;" onclick="ACTIVE_SUBMENU_HIDE();"></div>
+	            <!--<li><input class="displayFilter" type="radio" id="fnone" onclick="$this.displayItems('none')" /><label for="fnone">None</label></li>-->
+	            <li><input class="displayFilter" type="radio" id="fall" onclick="$this.displayItems('all')" checked /><label for="fall">All</label></li>
+	            <li><input class="displayFilter" type="radio" id="fnotfinished" onclick="$this.displayItems('notfinished')"  /><label for="fnotfinished">Open</label></li>
+	            <li><input class="displayFilter" type="radio" id="ffinished" onclick="$this.displayItems('finished')" /><label for="ffinished">Closed</label></li>
+	
+	          </ul></li>
+	        </ul>
+	      </div>
+	      <a href="javascript:void(0)" onclick="$this.toggleView('expand')" class="expandAll">Expand All</a> &nbsp; 
+	      <a href="javascript:void(0)" onclick="$this.toggleView('collapse')">Collapse All</a> &nbsp; 
+        <a href="javascript:void(0)" onclick="$this.backToTop()">Go to Top</a> &nbsp; 
+	    </div>
+		</div>
+		<% end %>
+		<div id="html_body">
+    <div class="topbar"></div>
+		<div style="width:100%;" id="wrap_outer">
+    <div id="wrap">
+    	<div id="siteHeader">
+        <% if session[:user_id] %>
+	    	<h1><a href="/web/home">mylist<br /><div>productivity</div></a></h1>
+        <div style="position:absolute; margin:-27px 0 0 100px; ">
+				  <a href="/todo/new" class="newlistb">
+        	 <div class="i"></div> 
+					 <div class="t">New List</div>
+					</a>
+				</div>
+				<% else %>
+				<h1><a href="/">mylist<br /><div>productivity</div></a></h1>
+				<% end %>
+			  <% if session[:user_id] %>
+        <div class="siteNav loggedin">
+					  <div class="links">
+						<a href="/web/home">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<% if @session_user.username.blank? %>
+						  <a href="/profile/<%=h encode(@session_user.id) %>">Profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<% else %>
+              <a href="/profile/<%=h @session_user.username %>">Profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<% end %>
+						</div>
+						
+            
+            <div class="itododropdown" style="margin:5px 0 0 0;">
+              <ul>
+                <li><a href="javascript:void(0)" class="itododropdown_outer"><span>People</span><div class="arwh"></div></a>
+                <ul class="dropdown" style="width:100px;">
+                  <li><a href="/contact/home">My Contacts</a></li>
+                  <li><a href="/search/people">Find People</a></li>
+                  <li class="last"><a href="/contact/invite">Invite</a></li>
+                </ul></li>
+              </ul>
+            </div>
+						
+			      <div class="itododropdown" style="margin:5px 0 0 0;">
+			        <ul>
+			          <li><a href="javascript:void(0)" class="itododropdown_outer"><span>My&nbsp;Account</span><div class="arwh"></div></a>
+								<ul class="dropdown" style="width:100px;">
+			            <li><a href="/web/settings">Settings</a></li>
+                  <li class="last"><a href="javascript:void(0)" onclick="$this.logout()">Sign Out</a></li>
+			          </ul></li>
+			        </ul>
+			      </div>
+						
+						
+					<% else %>
+        <div class="siteNav">
+            <div class="links">
+					  <%=link_to "Beta Testing", { :controller => "web", :action => "join" }%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					  <%=link_to "Sign In", { :controller => "web", :action => "login" }%>
+						</div>
+          <% end %>
+				</div>
+			</div>
+	  <% if params[:controller] == 'web' %>
+	    <% if params[:action] == 'profile' || params[:action] == 'home' %>
+				<div id="siteBody" class="home_profile">
+	    <% else%>
+	      <div id="siteBody" class="form_page">
+		  <% end %>
+    <% elsif params[:controller] == 'todo' %>
+      <div id="siteBody" class="itodolist">
+    <% else%>
+      <div id="siteBody" class="form_page">
+		<% end %>
+<%= yield %>
+      </div>
+			<div id="siteFooter">
+				{Footer}
+			</div>
+    </div>
+    </div>
+		<iframe name="http_tunnel" id="http_tunnel" src="about:blank" width="1" height="1"></iframe>
+		<% if session[:user_id] %>
+    <div id="itodoDurationPanel">
+    	<div class="cls" onclick="$this.durationPanelHide();"></div>
+      <div class="r" style="margin-left:0px;">
+        <div class="n"><span>Start Date</span></div>
+        <div class="fieldBorder">
+          <input class="noBorder" type="input" id="item_start" />
+        </div><div class="caln"></div>
+      </div>
+      <div class="r">
+        <div class="n"><span>Due Date</span></div>
+        <div class="fieldBorder">
+          <input class="noBorder" type="input" id="item_due" />
+        </div><div class="caln"></div>
+      </div>
+			<div class="r">
+				<button onclick="$this.setDuration(this)">Set Duration</button>
+			</div>
+    </div>
+
+    <div id="itodoPredecessorPanel">
+      <div class="cls" onclick="$this.predecessorPanelHide();"></div>
+      <div class="r" style="margin-left:0px;">
+        <div class="n"><span>Task ID</span></div>
+        <div class="fieldBorder">
+          <input class="noBorder" type="input" id="item_predecessor" />
+        </div>
+      </div>
+      <div class="r">
+        <button onclick="$this.setPredecessor(this)">Set Predecessor</button>
+      </div>
+    </div>
+		<div id="SYS_SWAP" style="width:1px; height:1px; overflow:hidden; top:-20000px; left:-20000px; position:absolute;">
+			<%= @html_reminderFormTpl %>
+			<!--separator-->
+			<%= @html_contactsPicker %>
+		</div>
+		<% end %>
+		<textarea style="position:fixed; bottom:0px; left:0px; width:200px; height:200px; display:none;" id="SYSTRAC"></textarea>
+		</div>
+  </body>
+</html>

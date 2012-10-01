@@ -1,0 +1,44 @@
+<form action="/web/join_beta" class="new_user" id="new_user" method="post">
+<input name="authenticity_token" type="hidden" value=<%= form_authenticity_token.inspect %> />
+<input name="id" type="hidden" value="<%= params[:id] %>" />
+<h1>Welcome to join our Beta Testing Program!</h1>
+<p style="padding:5px 2px;">
+	<b style="color:#36c">Step 1 of 2. Create an account</b><br />
+  <span style="color:#aaa">Step 2 of 2. Activate your account through email</span><br /><br />
+	Please fill your personal information and then click "join now" to create your account.
+</p>
+<br />
+<% if !@user.nil? %>
+<div class="error_messages">
+	<div class="i"></div>
+  <% @user.errors.to_a.sort.each {|e|%>
+	  <div class="m">
+	  	<div class="b"></div>
+      <%= e.join(' ').sub(/^[0-9]+/, '') %>
+		</div>
+	<% } %>
+</div>
+	<br />
+<% end %>
+<table>
+  <tr><td class="fieldWidth">Email</td><td><div class="fieldBorder">
+  	<input class="noBorder" id="user_email" name="user[email]" size="30" type="text" value="<%=h @user ? @user.email : '' %>">
+	</div></td></tr>
+  <tr><td>First Name</td><td><div class="fieldBorder">
+  	<input class="noBorder" id="user_firstname" name="user[firstname]" size="30" type="text" value="<%=h @user ? @user.firstname : '' %>">
+	</div></td></tr>
+  <tr><td>Last Name</td><td><div class="fieldBorder">
+  	<input class="noBorder" id="user_lastname" name="user[lastname]" size="30" type="text" value="<%=h @user ? @user.lastname : '' %>">
+  </div></td></tr>
+  <tr><td>Password</td><td><div class="fieldBorder">
+  	<input class="noBorder" id="user_password" name="user[password]" size="30" type="password" value="">
+  </div></td></tr>
+  <tr><td>Confirm Password&nbsp;&nbsp;&nbsp;&nbsp;</td><td><div class="fieldBorder">
+  	<input class="noBorder" id="user_password_confirmation" name="user[password_confirmation]" size="30" type="password" value="">
+  </div></td></tr>
+  <tr><td></td><td>&nbsp;</td></tr>
+  <tr><td></td><td>
+    <button>Join Now</button>
+	</td></tr>
+</table>
+</form>

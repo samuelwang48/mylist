@@ -1,0 +1,76 @@
+<div class="mainContainer">
+  <div class="siteBlock profileblk">
+    <div class="addContact" style="width:120px; height:30px;">
+    </div>
+		<div class="profileInfo">
+		  <div class="avatar"><a href="javascript:;"><img src="<%=@user.avatar_url('large')%>"/></a></div>
+		  <div class="name"><%=h @user.firstname + ' ' + @user.lastname%></div>
+		  <div class="jobTitle"><%=h @user.position %></div>
+		  <div class="occupation"><%=h @user.occupation %></div>
+      <div class="url"><a href="<%=h @user.url %>"><%=h @user.url %></a></div>
+      <div class="bio"><%=h @user.bio %></div>
+      <input type="hidden" id="user_id" value="<%= encode @user.id %>" />
+		</div>
+  </div>
+<%= render :partial => "web/subnav" %>
+  <div class="siteBlock tdlblk">
+    <%= @home_tab_html %>
+  </div>
+  
+</div>
+<div class="sideContainer" id="sideContainer">
+	<div class="sideBlock">
+		<div style="margin:10px">
+			<% items_total = @user.items_total == 0 ? 1 : @user.items_total %>
+			<% open_items_total = @user.open_items_total %>
+			<% closed_items_total = @user.closed_items_total %>
+			<% tracking_total = @user.trackings.size %>
+			<% tracker_total = @user.trackers.size %>
+	    <% percentage = (closed_items_total.to_f/items_total.to_f*10000).to_i/100 %>
+	    <% barwidth = 270 %>
+	    <div class="barcon_overall" style="width:<%= barwidth %>px; " title="Busy-Level">
+	      <div class="barin_overall" style="width:<%= (percentage.to_f/100*barwidth).to_i %>px; "></div>
+	      <div class="bartx_overall"><%= percentage.to_s %>%</div>
+	    </div>
+			<div class="summary_row" style="border-top:none; margin-top:3px;">
+			  <div class="summary_item" style="border-left:none;"><div class="numbr"><%= @user.todos.size %></div> <div>Lists</div></div>
+			  <div class="summary_item"><div class="numbr"><%= items_total %></div> <div>Todos</div></div>
+			  <div class="summary_item"><div class="numbr"><%= open_items_total %></div> <div>Open</div></div>
+		    <div class="summary_item" style="border-right:none;"><div class="numbr"><%= closed_items_total %></div> <div>Closed</div></div>
+			</div>
+		  <div class="summary_row">
+	      <div class="summary_item" style="border-left:none;"><div class="numbr"><%= tracking_total %></div> <div>Tracking</div></div>
+	      <div class="summary_item" style="border-right:none;"><div class="numbr"><%= tracker_total %></div> <div>Trackers</div></div>
+			</div>
+	    <!--<div class="summary_row" style="border-bottom:none"></div>-->
+		</div>
+	</div>
+  <div class="sideBlock sideBlock_tabs_large">
+    <div class="sideBlock_head">
+      <div class="itododropdown" style="margin:5px 0 0 0;">
+        <ul>
+          <li><a href="javascript:void(0)" class="itododropdown_outer"><span>
+          	
+			      <% if cookies[:GI].blank? %>
+			        My Contacts (<%=h @user.contacts.size %>)
+			      <% else %>
+			        <% @CookiesGroup = ContactGroup.find(decode cookies[:GI]) %>
+			        <% @CookiesGroupContacts = @CookiesGroup.contacts %>
+			        <%=h @CookiesGroup.name %> (<%=h @CookiesGroupContacts.size %>)
+			      <% end %>
+          	  
+						</span><div class="arwh"></div></a><ul class="dropdown">
+            <li><a href="javascript:void(0)" onclick="$this.homeLoadContactsFromGroup('', this)">My Contacts (<%=h @contacts.size %>)</a></li>
+					  <% @user_contact_groups.each {|g| %>
+					  <li><a href="javascript:void(0)" onclick="$this.homeLoadContactsFromGroup('<%=h encode g.id %>', this)"><%=h g.name %> (<%=h g.contact_groups_relations.size %>)</a></li>
+					  <% } %>
+          </ul></li>
+        </ul>
+      </div>
+    </div>
+		<div style="margin:15px 10px;" id="user_home_contacts">
+			<%= render :partial => "home_contacts", :collection => @contacts %>
+		</div>
+  </div>
+
+</div>

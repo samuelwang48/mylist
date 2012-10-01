@@ -1,0 +1,59 @@
+<% c_width = 570 
+   c_height = 240 
+   range_count = 30 
+   r_count = 23 
+   lastdate = site_logs.size > 0 ? site_logs.last.created_at : Time.now #Time.zone.now 
+%>
+	
+<div style="clear:both; height:<%= c_height+50 %>px;" class="slogTmlCon">
+  <div class="slogTmlYT">0:00</div>
+	<div class="slogTmlBody" style="width:<%= c_width %>px; height:<%= c_height %>px; ">
+		<!--
+	  <%# 1.upto(r_count) {|c| %>
+		  <div style="height:<%#= (c_height/r_count)-1 %>px; overflow:hidden; <%#= c==1 ? "" : "border-top:1px solid #f5f5f5; "%> ">
+        <%# 1.upto(range_count) {|rc| %>
+				  <div class="slogTmlCol" style="width:<%#=c_width/range_count -1 %>px; height:<%#= (c_height/r_count)-1 %>px; overflow:hidden; <%#= rc==1 ? "" : "border-left:1px solid #f5f5f5; "%>"></div>
+				<%# } %>
+		  </div>
+		<%# } %>
+		-->
+	</div>
+  <div class="slogTmlBodyData" style="width:<%= c_width %>px; height:<%= c_height %>px; margin-top:-<%= c_height %>px; ">
+	  <% 1.upto(range_count) {|d| %>
+	    <% nextdate = lastdate.localtime - (range_count-d)*60*60*24 %>
+			<div class="slogTmlCol" style="width:<%=c_width/range_count %>px; overflow:hidden; ">
+				<% 
+           accumulatedSlogs = []
+           selected_slogs = site_logs.select{|slog| 
+				    slog.created_at.localtime.year == nextdate.year &&
+				    slog.created_at.localtime.month == nextdate.month &&
+				    slog.created_at.localtime.day == nextdate.day
+				   }
+				   
+				   selected_slogs.each_with_index{|log, i|
+				     nextSlog = selected_slogs[i+1]
+
+             if !nextSlog.blank? && (log.created_at.localtime.hour == nextSlog.created_at.localtime.hour)
+					     accumulatedSlogs.push(log)
+					   else
+					     marginTop = log.created_at.localtime.hour.to_i*(c_height/r_count)
+        %>
+					<a href="javascript:void(0)" class="slogDot<%= accumulatedSlogs.size > 0 ? " many" : "" %>" 
+					   style="margin-left:<%= ((c_width/range_count)-10)/2 %>px; 
+					          margin-top:<%= marginTop %>px;"
+					   title="<%=accumulatedSlogs.concat([log]).collect{|alog| alog.created_at.localtime.strftime("%Y-%m-%d %H:%M:%S") + "\n" + log_for(alog.log_type)}.join("\n------\n")%>">&nbsp;</a>
+					<% accumulatedSlogs = [] %>
+					<% end %>
+      <% } %>&nbsp;
+			</div>
+	  <% } %>
+  </div>
+  <div class="slogTmlYM" style="margin-top:-<%= (c_height+20)/2 %>px; margin-bottom:<%= (c_height+20)/2 %>px; ">12:00</div>
+  <div class="slogTmlYB">24:00</div>
+	<div id="slog-drange">
+  <% 1.upto(range_count) {|d| %>
+    <% nextdate = lastdate.localtime - (range_count-d)*60*60*24 %>
+    <div class="slogTmlXUnit" style="width:<%=c_width/range_count %>px; "><%= nextdate.localtime.strftime("%d") %></div>
+  <% } %>
+	</div>
+</div>

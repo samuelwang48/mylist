@@ -1,0 +1,40 @@
+      <div class="cpkr_con" id="contact_picker">
+        <div style="margin:0 2px;">
+          <input id="cpkr_filterText" onkeyup="$this.pselectContactFilter(this.value)" type="text" style="width:218px; border:1px solid #ccc; border-top:1px solid #777; border-left:1px solid #777; margin-bottom:0; margin-top:0; padding:1px 13px 1px 13px;" />
+          <div class="mag"></div>
+          <div id="cpkr_clearFilterText" onclick="$('#cpkr_filterText').val('').focus(); $this.pselectContactFilter(''); " class="clr"></div>
+        </div>
+        <div>
+          <select style="width:247px; margin:2px;" onchange="$this.pchangeGroup()" id="cpkr_group_select">
+            <option value="all">My Contacts (<%=h @contacts.size %>)</option>
+            <% @user_contact_groups.each {|g| %>
+            <option value="<%= g.contact_groups_relations.collect{|a|a.contact_id}.join(',') %>"><%=h g.name %> (<%=h g.contact_groups_relations.size %>)</option>
+            <% } %>
+          </select>
+        </div>
+        <div style="text-align:right; padding-bottom:2px;">select <a href="javascript:void(0)" onclick="$this.pcontactSelect('all')">all</a> <a href="javascript:void(0)" onclick="$this.pcontactSelect('none')">none</a>&nbsp;&nbsp;</div>
+        <div class="cpkr_list">
+          <% @contacts.each {|c| %>
+          <div class="cpkr_contact"><a href="javascript:void(0)" cid="cid_<%= c.id %>" id="lcid_<%= c.id %>"><%=h c.firstname + ' ' + c.lastname %>
+          <div class="cpkr_checked"></div>
+          </a></div>
+          <% } %>
+        </div>
+        <div style="padding:2px 0 0 2px;">
+          <span style="color:#333;">Selected Contacts:</span>
+        </div>
+        <div class="cpkr_selected">
+        </div>
+        <div style="padding:2px 0 2px 2px;">
+          <span style="color:#333;">Message:</span>
+        </div>
+				<div style="padding:0 0 0 2px; height:48px;">
+					<div class="fieldBorder">
+						<textarea id="contact_picker_msg" class="noBorder" style="width:240px; height:40px; ">I want to share my list with you.</textarea>
+					</div>
+				</div>
+        <div style="text-align:center; margin:5px;">
+          <button id="cpkr_pick">Pick</button> 
+          <a href="javascript:void(0)" onclick="$this.win_contactpicker.dialog('close')">Cancel</a>
+        </div>
+      </div>

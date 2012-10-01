@@ -1,0 +1,7 @@
+.subNav .pending { top:-15px; margin-right:-20px; top:-15px; }
+.subNav .pending div { background:#f00; }
+.itemViews .mag {width:12px; height:12px; overflow:hidden; background:url(/images/a.gif) -163px -114px no-repeat; position:absolute; margin:5px 0 0 0; margin-left:-141px; }
+.itemViews .clr {display:none; width:12px; height:12px; overflow:hidden; background:url(/images/a.gif) -34px -194px no-repeat; position:absolute; margin:5px 0 0 0; cursor:pointer; margin-left:-18px; }
+
+.itododropdown button.itododropdown_outer { padding-left:10px; padding-right:8px;}
+.contacts_btn_arw{width:9px; height:6px; overflow:hidden; background:url(/images/a.gif) -68px -21px no-repeat; float:right; margin:3px 0 0 5px;}

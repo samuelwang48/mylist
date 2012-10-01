@@ -1,0 +1,15 @@
+<div class="dtr">
+	<div class="dtd dtd_num"><%= todoitem_counter + 1%></div>
+	<div class="dtd dtd_item">
+		<div class="itm_options">
+	    <input type="checkbox" id="item_<%=todoitem.id %>" value="<%=todoitem.id %>" onclick="$this.checkItem(this)" <%= todoitem.is_finished ? 'checked' : ''%> />
+      <a href="javascript:void(0)" class="itemDone">
+      	<label for="item_<%=todoitem.id %>">
+      	 	 <span><%= todoitem.is_finished ? 'undo' : 'done'%></span>
+        </label>
+			</a>
+      <div class="iopt_created"><%=to_pretty(todoitem.created_at) %></div>
+		</div>
+	  <div class="itm_description"><%=todoitem.description %></div>
+	</div>
+</div>

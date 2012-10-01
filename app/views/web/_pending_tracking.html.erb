@@ -1,0 +1,28 @@
+<div class="tracking" style="background:#e3f4ff; border:1px solid #c0e3fa; padding:10px 5px; margin:0 -4px 9px -4px; overflow:hidden; ">
+  <div class="b">
+  	<button onclick="$this.acceptTracking('<%= encode pending_tracking.id %>', 1, this)">Accept</button> 
+		<button onclick="$this.acceptTracking('<%= encode pending_tracking.id %>', 0, this)">Ignore</button>
+  </div>
+  "<i><%=h pending_tracking.message.blank? ? 'I want to share my list with you.' : pending_tracking.message %></i>" - 
+  <% if pending_tracking.init_user.username.blank? %>
+    <a href="/profile/<%=h encode(pending_tracking.init_user.id) %>" target="_blank">
+  <% else %>
+    <a href="/profile/<%=h pending_tracking.init_user.username %>" target="_blank">
+  <% end %>
+	 <%=h pending_tracking.init_user.firstname %> <%=h pending_tracking.init_user.lastname %>
+  <a>
+  
+	<div style="margin-top:10px;" class="todoname">
+		<% todolist = pending_tracking.todo %>
+	  <% percentage = (todolist.finished.size.to_f/todolist.items.size.to_f*10000).to_i/100 %>
+	  <% barwidth = 60 %>
+	  <div class="barcon" style="width:<%= barwidth %>px; " title="progress" todo="<%=todolist.id%>">
+	    <div class="barin" style="width:<%= (percentage.to_f/100*barwidth).to_i %>px; "></div>
+	    <div class="bartx"><%= percentage %>%</div>
+	  </div>
+	  <div class="listname"><a href="/todo/edit/<%= encode(todolist.id) %>">
+	    <%=h todolist.name %>
+	  </a></div>
+		<div class="created_at" style="float:right; margin-top:-15px; margin-right:63px;"><%=to_pretty(pending_tracking.created_at) %></div>
+	</div>
+</div>

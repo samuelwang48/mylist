@@ -1,0 +1,6 @@
+<table>
+  <tbody id="moreTbody">
+    <%= render :partial => "todolist", :collection => user_trackings %>
+  </tbody>
+</table>
+<button class="showmoreresults" onclick="$this.getMoreTrackings(this)" num="1">More Trackings</button>

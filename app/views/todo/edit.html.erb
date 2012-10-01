@@ -1,0 +1,224 @@
+<div class="mainContainer itemsPage">
+  <h1 id="checklist_page_title"><%=h @todo.name %></h1>
+  <div class="dti_options">
+  	<% items_size = @todo.items.size == 0 ? 1 : @todo.items.size %>
+    <% percentage = (@todo.finished.size.to_f/items_size.to_f*10000).to_i/100 %>
+    <% barwidth = 60 %>
+    <div class="barcon" style="width:<%= barwidth %>px; ">
+      <div class="barin" style="width:<%= (percentage.to_f/100*barwidth).to_i %>px; "></div>
+      <div class="bartx"><%= percentage %>%</div>
+    </div>
+    <!--<a href="/todo/<%= @todo.id %>" class="btn"><div class="view"></div>Read Mode</a> 
+    <a href="/todo/setdefault/<%= @todo.id %>" class="btn"><div class="setd"></div>Set Default</a>-->
+  </div>
+  
+  <div class="mainPart">
+    <% if @user_auth['w'] == true %>
+    <div class="fieldRow list_btns" style="height:35px; ">
+			<div style="float:left; margin-right:2px;">
+	      <button class="button_save" onclick="javascript:$this.saveTodo(<%= decode params[:id]%>)" type="button">Save Now</button> 
+	      <button class="button_delete" onclick="javascript:$this.deleteTodo(<%= decode params[:id]%>)">Delete</button> 
+	      <button class="button_exit" onclick="$dir('/web/home')">Exit</button>
+			</div>
+      <div class="itododropdown">
+        <ul>
+          <li><button type="button" class="itododropdown_outer" onclick="ON_ACTIVE_SUBMENU_HIDE = function(){$('#pcon').css('height','auto')}">Share <div class="contacts_btn_arw"></div></button>
+						<ul class="dropdown" style="margin-top:-2px; padding:10px 5px 8px 5px; width:290px; ">
+	            <div style="position:absolute; font-size:9px; margin:-6px 0 0 280px; width:12px; height:12px; overflow:hidden; background:url(<%= ITODO_CDN_HOST %>/images/a.gif) -35px -211px no-repeat; cursor:pointer;" onclick="ACTIVE_SUBMENU_HIDE();"></div>
+	            
+	            <li>
+	            	<div id="pcon">
+	            		<h3>Sharing Settings</h3>
+									<table id="pcon_selected">
+                    <tr class="fr">
+                      <td class="pe"></td>
+                      <td>Read</td>
+                      <td>Write</td>
+                      <td>Delete</td>
+                      <td class="ls"></td>
+                    </tr>
+                    <tr class="p_public">
+                      <td class="pe"><b>Public</b></td>
+                      <td><a href="javascript:void(0)" class="sel" onclick="$this.pselectperm(this)"><%= @todo.permission_public.r ? '<div class="check"></div>' : '' %></a></td>
+                      <td><a href="javascript:void(0)" class="sel" onclick="$this.pselectperm(this)"><%= @todo.permission_public.w ? '<div class="check"></div>' : '' %></a></td>
+                      <td><a href="javascript:void(0)" class="sel" onclick="$this.pselectperm(this)"><%= @todo.permission_public.d ? '<div class="check"></div>' : '' %></a></td>
+                      <td class="ls"></td>
+                    </tr>
+						        <tr class="p_mycontacts">
+						          <td class="pe"><b>My Contacts</b></td>
+                      <td><a href="javascript:void(0)" class="sel" onclick="$this.pselectperm(this)"><%= @todo.permission_mycontacts.r ? '<div class="check"></div>' : '' %></a></td>
+                      <td><a href="javascript:void(0)" class="sel" onclick="$this.pselectperm(this)"><%= @todo.permission_mycontacts.w ? '<div class="check"></div>' : '' %></a></td>
+                      <td><a href="javascript:void(0)" class="sel" onclick="$this.pselectperm(this)"><%= @todo.permission_mycontacts.d ? '<div class="check"></div>' : '' %></a></td>
+						          <td class="ls"></td>
+						        </tr>
+                    <tr>
+                      <td class="pe"><b>Owner</b></td>
+                      <td><div class="check"></div></td>
+                      <td><div class="check"></div></td>
+                      <td><div class="check"></div></td>
+                      <td class="ls"></td>
+                    </tr>
+										<% @todo.permission_contacts.each {|p| %>
+                    <tr class="p_contact" cid="cid_<%= p.contact_id %>">
+                      <td class="pe"><%=h p.firstname+' '+p.lastname%></td>
+                      <td><a href="javascript:void(0)" class="sel" onclick="$this.pselectperm(this)"><%= p.r ? '<div class="check"></div>' : '' %></a></td>
+                      <td><a href="javascript:void(0)" class="sel" onclick="$this.pselectperm(this)"><%= p.w ? '<div class="check"></div>' : '' %></a></td>
+                      <td><a href="javascript:void(0)" class="sel" onclick="$this.pselectperm(this)"><%= p.d ? '<div class="check"></div>' : '' %></a></td>
+                      <td class="ls"></td>
+                    </tr>
+                    <% } %>
+                    <tr class="p_contact">
+                      <td class="pe"><a class="label" href="javascript:void(0)" onclick="setTimeout(function(){$this.pselectGroup()},0)">Pick from My Contacts</a></td>
+                      <td><a href="javascript:void(0)" class="sel" onclick="$this.pselectperm(this)"></a></td>
+                      <td><a href="javascript:void(0)" class="sel" onclick="$this.pselectperm(this)"></a></td>
+                      <td><a href="javascript:void(0)" class="sel" onclick="$this.pselectperm(this)"></a></td>
+                      <td class="ls"></td>
+                    </tr>
+									</table>
+									<div style="text-align:center;"><button id="button_share_settings" type="button" style="padding:3px 20px;" onclick="$this.saveTodoPermissions(<%= decode params[:id]%>)">Apply</button></div>
+							  </div>
+							</li>
+	          </ul>
+					</li>
+        </ul>
+      </div>
+      
+    </div>
+		<% else %>
+    <div class="fieldRow list_btns" style="height:35px; ">
+      <div style="float:left; margin-right:2px;">
+			  <% if @user_tracking %>
+				<button class="button_tracking button_down_persist" onclick="$this.stopTrackingTodo(<%= decode params[:id]%>)" onmouseover="this.innerHTML='Stop Tracking'" onmouseout="this.innerHTML='Tracking'">Tracking</button> 
+				<% else %>
+        <button class="button_tracking" onclick="$this.startTrackingTodo(<%= decode params[:id]%>)">Track</button> 
+				<% end %>
+        <button class="button_save_as" onclick="$this.saveListAs(<%= decode params[:id]%>)" type="button">Save As</button> 
+        <button class="button_exit" onclick="$dir('/web/home')">Exit</button>
+      </div>
+		</div>
+    <% end %>
+		
+		<% if @user_auth['w'] == true %>
+    <div class="fieldRow">
+      <div class="fieldBorder">
+        <input class="noBorder" id="todo_name" name="todo[name]" onkeyup="$this.updateChecklistPageTitle(this.value)" size="30" style="width:608px; " type="text" value="<%= @todo.name %>">
+      </div>
+    </div>
+    <div class="fieldRow">
+      <div class="fieldBorder">
+        <textarea class="noBorder" cols="40" id="todo_description" name="todo[description]" rows="20" style="width:608px; height:50px;"><%=h @todo.description %></textarea>
+      </div>
+    </div>
+		<% else %>
+    <div class="fieldRow">
+        <%=h @todo.description %>
+    </div>
+    <% end %>
+    <div class="itemViews" id="inlineListFilter">
+    	<% if @user_auth['w'] == true %>
+      <a href="javascript:void(0)" onclick="$this.appendMoreItem(this)" style="font-weight:bold;">+ Append List...</a> &nbsp; 
+      <div class="itododropdown" style="margin:0 10px -5px 10px;">
+			<% else %>
+      <div class="itododropdown" style="margin:0 10px -5px -3px;">
+			<% end %>
+        <ul>
+          <li>
+          	<div class="itododropdown_outer">
+              <input autocomplete="off" id="filterText" onkeyup="$this.filterByText(this.value)" type="text" style="width:113px; border:1px solid #ccc; border-top:1px solid #777; border-left:1px solid #777; margin-bottom:0; margin-top:0; padding:1px 13px 1px 13px;" />
+              <div class="mag"></div>
+              <div id="clearFilterText" onclick="$('#filterText').val('').focus(); $this.filterByText(''); $this.displayItems('all'); " class="clr"></div>
+						</div>
+						<ul class="dropdown dropdown_upwards">
+            <div style="position:absolute; font-size:9px; margin:-6px 0 0 139px; width:12px; height:12px; overflow:hidden; background:url(<%= ITODO_CDN_HOST %>/images/a.gif) -35px -211px no-repeat; cursor:pointer;" onclick="ACTIVE_SUBMENU_HIDE();"></div>
+            <!--<li><input class="displayFilter" type="radio" id="fnone" onclick="$this.displayItems('none')" /><label for="fnone">None</label></li>-->
+            <li><input class="displayFilter" type="radio" id="fall" onclick="$this.displayItems('all')" checked /><label for="fall">All</label></li>
+            <li><input class="displayFilter" type="radio" id="fnotfinished" onclick="$this.displayItems('notfinished')"  /><label for="fnotfinished">Open</label></li>
+            <li><input class="displayFilter" type="radio" id="ffinished" onclick="$this.displayItems('finished')" /><label for="ffinished">Closed</label></li>
+
+          </ul></li>
+        </ul>
+      </div>
+      <a href="javascript:void(0)" onclick="$this.toggleView('expand')" class="expandAll">Expand All</a> &nbsp; 
+      <a href="javascript:void(0)" onclick="$this.toggleView('collapse')">Collapse All</a> &nbsp; 
+    </div>
+    <% if @user_auth['w'] == true %>
+    <div id="todoItemsList" class="todoItems">
+    <% else %>
+    <div id="todoItemsList" class="todoItems readonly">
+		<% end %>
+      <%= render :partial => "todoitemEdit", :collection => @todo.items %>
+      <div id="endItemsList"></div>
+      <div id="arrow_insert" style="height:8px; overflow:hidden; margin-left:18px; width:625px; position:absolute; margin-top:-3px; display:none;">
+        <div style="width:4px; height:8px; overflow:hidden; background:url(<%= ITODO_CDN_HOST %>/images/a.gif) -39px -21px no-repeat; float:left;"></div>
+        <div style="height:1px; overflow:hidden; width:617px; background:#69A3F5; float:left; margin-top:3px;"></div>
+        <div style="width:4px; height:8px; overflow:hidden; background:url(<%= ITODO_CDN_HOST %>/images/a.gif) -102px -21px no-repeat; float:right;"></div>
+      </div>
+			<div id="dragging_con" style="display:none; position:absolute; width:616px; height:26px; "></div>
+    </div>
+    <div class="itemViews">
+    	<% if @user_auth['w'] == true %>
+      <a href="javascript:void(0)" onclick="$this.appendMoreItem(this)" style="font-weight:bold;">+ Append List...</a> &nbsp; 
+			<% end %>
+      <br /><br />
+    </div>
+    <input id="todo_user_id" name="todo[user_id]" type="hidden" value="<%= @todo.user_id %>">
+
+    <% if @user_auth['w'] == true %>
+    <div class="fieldRow">
+      <button class="button_save" onclick="javascript:$this.saveTodo(<%= decode params[:id]%>)" type="button">Save Now</button>
+      <button class="button_delete" onclick="javascript:$this.deleteTodo(<%= decode params[:id]%>)">Delete</button> 
+      <button class="button_exit" onclick="$dir('/web/home')">Exit</button>
+    </div>
+    <% else %>
+    <div class="fieldRow" style="height:35px; ">
+      <div style="float:left; margin-right:2px;">
+        <% if @user_tracking %>
+        <button class="button_tracking button_down_persist" onclick="$this.stopTrackingTodo(<%= decode params[:id]%>)" onmouseover="this.innerHTML='Stop Tracking'" onmouseout="this.innerHTML='Tracking'">Tracking</button> 
+        <% else %>
+        <button class="button_tracking" onclick="$this.startTrackingTodo(<%= decode params[:id]%>)">Track</button> 
+        <% end %>
+        <button class="button_save_as" onclick="$this.saveListAs(<%= decode params[:id]%>)" type="button">Save As</button> 
+        <button class="button_exit" onclick="$dir('/web/home')">Exit</button>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</div>
+<div class="sideContainer">
+  <div class="list_information">
+		<div class="summary_row">
+      <div class="summary_item" style="border:none;"><div class="numbr"><%= @todo.reads %></div> <div>Reads</div></div>
+      <div class="summary_item" style="border:none;"><div class="numbr"><%= @todo.savers.size %></div> <div>Save As</div></div>
+      <div class="summary_item" style="border:none;"><div class="numbr"><%= @todo.trackings.size %></div> <div>Trackers</div></div>
+		</div>
+  </div>
+
+  <div class="list_information" id="ganttChartCon">
+    <% 
+      start = @todo.duration['start']
+      @start = start.blank? ? Time.now().utc : start.to_time.utc
+      due = @todo.duration['due']
+      @due = due.blank? ? Time.now().utc : due.to_time.utc
+      full_width = 260
+      @duration = (@due - @start)/1.day
+      @unit_width = full_width/@duration
+    %>
+    <script>
+      GANTT_START = new Date(<%= @start.year %>, <%= @start.month - 1 %>, <%= @start.day %>);
+      GANTT_DUE = new Date(<%= @due.year %>, <%= @due.month - 1 %>, <%= @due.day %>);
+      GANTT_FULLWIDTH = <%= full_width %>;
+      GANTT_DURATION = <%= @duration %>;
+      GANTT_UNITWIDTH = <%= @unit_width %>;
+    </script>
+    <div class="ganttChartInner">
+      <% if @start && @due %>
+      <%= render :partial => "ganttChartItem", 
+                 :collection => @todo.items, 
+                 :local => { 
+                   :start => @start, 
+                   :due => @due,
+                   :unit_width => @unit_width } %>
+      <% end %>
+    </div>
+  </div>
+</div>

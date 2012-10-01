@@ -1,0 +1,335 @@
+<div>
+<%= @html_contactsNav %>
+<div class="contactsCon">
+  <div style="margin:0 0 5px 22px; height:30px;">
+    <div style="float:left;">
+      <button class="button_save" onclick="$this.updateContact()">Save</button> 
+      <button class="button_delete" onclick="$this.deleteContact()">Delete</button> 
+    <% if @contact.local_user_id == 0 %>
+      <button onclick="$this.inviteContactForm()">Invite</button> 
+    <% end %>
+    </div>
+    <div class="itododropdown editContact" style="margin:0px 0 0 2px; float:left;">
+      <ul>
+        <li><button type="button" class="itododropdown_outer">Groups <div class="contacts_btn_arw"></div></button><ul class="dropdown" style="margin-top:-2px;">
+          <div style="position:absolute; font-size:9px; margin:-6px 0 0 139px; width:12px; height:12px; overflow:hidden; background:url(<%= ITODO_CDN_HOST %>/images/a.gif) -35px -211px no-repeat; cursor:pointer;" onclick="ACTIVE_SUBMENU_HIDE();"></div>
+          <li class="first"><input type="checkbox" id="g0" checked readonly/><label for="g0">My Contacts</label></li>
+          <% @user.contact_groups.each {|g| %>
+          <li>
+            <input type="checkbox" id="g<%=h g.id %>" class="contact_groups" name="contact_groups[]" value="<%=h g.id %>" 
+					  <%= @contact.contact_groups_relations.collect{|i| i.contact_group }.include?(g) ? 'checked' : ''  %> />
+					  <label for="g<%=h g.id %>"><%=h g.name %></label>
+					</li>
+          <% } %>
+        </ul></li>
+      </ul>
+    </div>
+  </div>
+  <div style="height:auto; overflow:hidden; ">		
+    <div class="fieldRow" id="name_auto_width_con" style="visibility:hidden;">
+      <div style="height:20px; overflow:hidden;">
+      </div>
+      <div class="fieldBorder" style="margin-right:5px;">
+        <div class="fieldLabel" style="position:absolute; margin-top:-25px">Firstname</div>
+        <input id="contact_firstname" name="firstname" class="noBorder autoWidth" style="min-width:60px; font:bold 20px arial; " type="text" value="<%=h @contact.firstname %>" />
+      </div>
+      <div class="fieldBorder">
+        <div class="fieldLabel" style="position:absolute; margin-top:-25px">Lastname</div>
+        <input id="contact_lastname" name="lastname" class="noBorder autoWidth" style="min-width:60px; font:bold 20px arial; " type="text" value="<%=h @contact.lastname %>" />
+      </div>
+      <input id="contact_id" type="hidden" value="<%= params[:id] %>" />
+    </div>
+		
+    <div class="contactGroupsLabel">
+      <div class="gn">
+        <div style="float:left;">My Contacts</div>
+        <!--<div onclick="" class="clos"></div>-->
+      </div>
+      <% @contact.contact_groups_relations.each {|r| %>
+      <div class="gn">
+        <div style="float:left;"><%=h r.contact_group.name %></div>
+        <!--<div onclick="" class="clos"></div>-->
+      </div>
+      <% } %>
+      <!--
+      <div class="gn">
+        <div style="float:left;">Friend</div>
+        <div onclick="" class="clos"></div>
+      </div>
+      <div class="gn">
+        <div style="float:left;">Colleague</div>
+        <div onclick="" class="clos"></div>
+      </div>
+      -->
+    </div>
+    <div class="fieldRow" style="float:right; margin-top:-105px;">
+      <div class="fieldLabel">Note</div>
+      <div class="fieldBorder">
+      	<% cf_note = @contact.fields_for('Note') %>
+      	<% if cf_note.size>0 %>
+				<% cf_note = cf_note[0] %>
+				  <textarea class="noBorder" id="contact_field_note" _cfid="<%=h cf_note.id %>" style="width:380px; height:400px; " type="text"><%=h cf_note.value %></textarea>
+				<% else %>
+          <textarea class="noBorder" id="contact_field_note" style="width:380px; height:400px; " type="text"></textarea>
+				<% end %>
+      </div>
+    </div>
+    <div id="contact_fields_con">
+      <table>
+      	<% fields_for_email = @contact.fields_for('Email') %>
+      	<% fields_for_email.each {|f| %>
+        <tr _type="Email">
+          <td class="fieldname">
+            <div class="itododropdown" style="margin:5px 0 0 0;">
+              <ul>
+                <li><a href="javascript:void(0)" class="itododropdown_outer" _type="Email"><span><%=h f.name %></span><div class="arwh"></div></a><ul class="dropdown">
+                  <li><a href="javascript:void(0)">Home</a></li>
+                  <li><a href="javascript:void(0)">Work</a></li>
+                  <li><a href="javascript:void(0)">Custom...</a></li>
+                </ul></li>
+              </ul>
+            </div>
+          </td>
+          <td>
+            <div class="fieldBorder">
+            	<input type="hidden" class="contact_field_id" value="<%=h f.id %>" />
+              <input class="noBorder" size="30" style="width:200px; " type="text" value="<%=h f.value %>" />
+            </div>
+            <div class="del"></div>
+          </td>
+        </tr>
+				<% } %>
+        <% if fields_for_email.size > 0 %>
+        <tr class="add"><td></td><td><a href="javascript:void(0)" onclick="$this.addContactField(this, 'Email')">Add email</a></td></tr>
+				<% else %>
+        <tr _type="Email">
+          <td class="fieldname">
+            <div class="itododropdown" style="margin:5px 0 0 0;">
+              <ul>
+                <li><a href="javascript:void(0)" class="itododropdown_outer" _type="Email"><span>Email</span><div class="arwh"></div></a><ul class="dropdown">
+                  <li><a href="javascript:void(0)">Home</a></li>
+                  <li><a href="javascript:void(0)">Work</a></li>
+                  <li><a href="javascript:void(0)">Custom...</a></li>
+                </ul></li>
+              </ul>
+            </div>
+          </td>
+          <td>
+            <div class="fieldBorder">
+              <input class="noBorder" size="30" style="width:200px; " type="text" value="" />
+            </div>
+            <div class="del"></div>
+          </td>
+        </tr>
+        <% end %>
+      </table>
+      <table>
+        <% fields_for_phone = @contact.fields_for('Phone') %>
+        <% fields_for_phone.each {|f| %>
+        <tr _type="Phone">
+          <td class="fieldname">
+            <div class="itododropdown" style="margin:5px 0 0 0;">
+              <ul>
+                <li><a href="javascript:void(0)" class="itododropdown_outer" _type="Phone"><span><%=h f.name %></span><div class="arwh"></div></a><ul class="dropdown">
+                  <li><a href="javascript:void(0)">Mobile</a></li>
+                  <li><a href="javascript:void(0)">Home</a></li>
+                  <li><a href="javascript:void(0)">Work</a></li>
+                  <li><a href="javascript:void(0)">Main</a></li>
+                  <li><a href="javascript:void(0)">Home Fax</a></li>
+                  <li><a href="javascript:void(0)">Work Fax</a></li>
+                  <li><a href="javascript:void(0)">Custom...</a></li>
+                </ul></li>
+              </ul>
+            </div>
+          </td>
+          <td>
+            <div class="fieldBorder">
+              <input type="hidden" class="contact_field_id" value="<%=h f.id %>" />
+              <input class="noBorder" size="30" style="width:200px; " type="text" value="<%=h f.value %>" />
+            </div>
+            <div class="del"></div>
+          </td>
+        </tr>
+        <% } %>
+        <% if fields_for_phone.size > 0 %>
+        <tr class="add"><td></td><td><a href="javascript:void(0)" onclick="$this.addContactField(this, 'Phone')">Add phone</a></td></tr>
+				<% else %>
+        <tr _type="Phone">
+          <td class="fieldname">
+            <div class="itododropdown" style="margin:5px 0 0 0;">
+              <ul>
+                <li><a href="javascript:void(0)" class="itododropdown_outer" _type="Phone"><span>Phone</span><div class="arwh"></div></a><ul class="dropdown">
+                  <li><a href="javascript:void(0)">Mobile</a></li>
+                  <li><a href="javascript:void(0)">Home</a></li>
+                  <li><a href="javascript:void(0)">Work</a></li>
+                  <li><a href="javascript:void(0)">Main</a></li>
+                  <li><a href="javascript:void(0)">Home Fax</a></li>
+                  <li><a href="javascript:void(0)">Work Fax</a></li>
+                  <li><a href="javascript:void(0)">Custom...</a></li>
+                </ul></li>
+              </ul>
+            </div>
+          </td>
+          <td>
+            <div class="fieldBorder">
+              <input class="noBorder" size="30" style="width:200px; " type="text" value="" />
+            </div>
+            <div class="del"></div>
+          </td>
+        </tr>
+        <% end %>
+      </table>
+      <table>
+        <% fields_for_address = @contact.fields_for('Address') %>
+        <% fields_for_address.each {|f| %>
+        <tr _type="Address">
+          <td class="fieldname">
+            <div class="itododropdown" style="margin:5px 0 0 0;">
+              <ul>
+                <li><a href="javascript:void(0)" class="itododropdown_outer" _type="Address"><span><%=h f.name %></span><div class="arwh"></div></a><ul class="dropdown">
+                  <li><a href="javascript:void(0)">Home</a></li>
+                  <li><a href="javascript:void(0)">Work</a></li>
+                  <li><a href="javascript:void(0)">Custom...</a></li>
+                </ul></li>
+              </ul>
+            </div>
+          </td>
+          <td>
+            <div class="fieldBorder">
+              <input type="hidden" class="contact_field_id" value="<%=h f.id %>" />
+              <input class="noBorder" size="30" style="width:200px; " type="text" value="<%=h f.value %>" />
+            </div>
+            <div class="del"></div>
+          </td>
+        </tr>
+        <% } %>
+        <% if fields_for_address.size > 0 %>
+        <tr class="add"><td></td><td><a href="javascript:void(0)" onclick="$this.addContactField(this, 'Address')">Add address</a></td></tr>
+        <% else %>
+        <tr _type="Address">
+          <td class="fieldname">
+            <div class="itododropdown" style="margin:5px 0 0 0;">
+              <ul>
+                <li><a href="javascript:void(0)" class="itododropdown_outer" _type="Address"><span>Address</span><div class="arwh"></div></a><ul class="dropdown">
+                  <li><a href="javascript:void(0)">Home</a></li>
+                  <li><a href="javascript:void(0)">Work</a></li>
+                  <li><a href="javascript:void(0)">Custom...</a></li>
+                </ul></li>
+              </ul>
+            </div>
+          </td>
+          <td>
+            <div class="fieldBorder">
+              <input class="noBorder" size="30" style="width:200px; " type="text" value="" />
+            </div>
+            <div class="del"></div>
+          </td>
+        </tr>
+        <% end %>
+      </table>
+      <table>
+        <% fields_for_anniversary = @contact.fields_for('Anniversary') %>
+        <% fields_for_anniversary.each {|f| %>
+        <tr _type="Anniversary">
+          <td class="fieldname">
+            <div class="itododropdown" style="margin:5px 0 0 0;">
+              <ul>
+                <li><a href="javascript:void(0)" class="itododropdown_outer" _type="Anniversary"><span><%=h f.name %></span><div class="arwh"></div></a><ul class="dropdown">
+                  <li><a href="javascript:void(0)">Anniversary</a></li>
+                  <li><a href="javascript:void(0)">Custom...</a></li>
+                </ul></li>
+              </ul>
+            </div>
+          </td>
+          <td>
+            <div class="fieldBorder">
+              <input type="hidden" class="contact_field_id" value="<%=h f.id %>" />
+              <input class="noBorder" size="30" style="width:200px; " type="text" value="<%=h f.value %>" />
+            </div>
+            <div class="del"></div>
+          </td>
+        </tr>
+        <% } %>
+        <% if fields_for_anniversary.size > 0 %>
+        <tr class="add"><td></td><td><a href="javascript:void(0)" onclick="$this.addContactField(this, 'Anniversary')">Add anniversary</a></td></tr>
+				<% else %>        <tr _type="Anniversary">
+          <td class="fieldname">
+            <div class="itododropdown" style="margin:5px 0 0 0;">
+              <ul>
+                <li><a href="javascript:void(0)" class="itododropdown_outer" _type="Anniversary"><span>Birthday</span><div class="arwh"></div></a><ul class="dropdown">
+                  <li><a href="javascript:void(0)">Anniversary</a></li>
+                  <li><a href="javascript:void(0)">Custom...</a></li>
+                </ul></li>
+              </ul>
+            </div>
+          </td>
+          <td>
+            <div class="fieldBorder">
+              <input class="noBorder" size="30" style="width:200px; " type="text" value="" />
+            </div>
+            <div class="del"></div>
+          </td>
+        </tr>
+        <% end %>
+      </table>
+      <table>
+        <% fields_for_URL = @contact.fields_for('URL') %>
+        <% fields_for_URL.each {|f| %>
+        <tr _type="URL">
+          <td class="fieldname">
+            <div class="itododropdown" style="margin:5px 0 0 0;">
+              <ul>
+                <li><a href="javascript:void(0)" class="itododropdown_outer" _type="URL"><span><%=h f.name %></span><div class="arwh"></div></a><ul class="dropdown">
+                  <li><a href="javascript:void(0)">Profile</a></li>
+                  <li><a href="javascript:void(0)">Blog</a></li>
+                  <li><a href="javascript:void(0)">Home Page</a></li>
+                  <li><a href="javascript:void(0)">Work</a></li>
+                  <li><a href="javascript:void(0)">Custom...</a></li>
+                </ul></li>
+              </ul>
+            </div>
+          </td>
+          <td>
+            <div class="fieldBorder">
+              <input type="hidden" class="contact_field_id" value="<%=h f.id %>" />
+              <input class="noBorder" size="30" style="width:200px; " type="text" value="<%=h f.value %>" />
+            </div>
+            <div class="del"></div>
+          </td>
+        </tr>
+        <% } %>
+        <% if fields_for_URL.size > 0 %>
+        <tr class="add"><td></td><td><a href="javascript:void(0)" onclick="$this.addContactField(this, 'URL')">Add url</a></td></tr>
+				<% else %>
+        <tr _type="URL">
+          <td class="fieldname">
+            <div class="itododropdown" style="margin:5px 0 0 0;">
+              <ul>
+                <li><a href="javascript:void(0)" class="itododropdown_outer" _type="URL"><span>URL</span><div class="arwh"></div></a><ul class="dropdown">
+                  <li><a href="javascript:void(0)">Profile</a></li>
+                  <li><a href="javascript:void(0)">Blog</a></li>
+                  <li><a href="javascript:void(0)">Home Page</a></li>
+                  <li><a href="javascript:void(0)">Work</a></li>
+                  <li><a href="javascript:void(0)">Custom...</a></li>
+                </ul></li>
+              </ul>
+            </div>
+          </td>
+          <td>
+            <div class="fieldBorder">
+              <input class="noBorder" size="30" style="width:200px; " type="text" value="" />
+            </div>
+            <div class="del"></div>
+          </td>
+        </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+    
+  <div style="margin:10px 0 10px 22px;" class="contacts_edit_buttons">
+      <button class="button_save" onclick="$this.updateContact()">Save</button>  
+      <button class="button_delete" onclick="$this.deleteContact()">Delete</button> 
+  </div>
+</div>
+</div>

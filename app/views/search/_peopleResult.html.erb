@@ -1,0 +1,22 @@
+    <div class="searchPeopleInfo">
+      <div class="avatar"></div>
+      <div class="name"><%=h peopleResult.firstname %> <%=h peopleResult.lastname %></div>
+      <div class="jobTitle"><%=h peopleResult.position %></div>
+      <div class="company"><%=h peopleResult.occupation %></div>
+      <div class="addContact">
+      	<form action="/contact/add_local" method="post">
+	        <input name="authenticity_token" type="hidden" value=<%= form_authenticity_token.inspect %> />
+	        <input type="hidden" name="user_id" class="user_id" value="<%= peopleResult.id %>" />
+	        <button><div style="background:url(<%= ITODO_CDN_HOST %>/images/a.gif) -18px -133px no-repeat"></div>Add to My Contacts</button>
+				</form>
+      </div>
+    </div>
+    <div class="searchPeopleRelatedInfo">
+      <h3>Recent Todo List</h3>
+      <table style="width:500px; margin:-7px 0 0 -1px;">
+        <tbody id="moreTbody">
+        <%= render :partial => "web/todolist", :collection => User.more(0,peopleResult.id) %>
+        </tbody>
+      </table>
+			<button class="showmoreresults" style="margin-left:130px;" onclick="web.getMoreTodo(this)" num="1">Show more todo lists</button>
+    </div>

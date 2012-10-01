@@ -1,0 +1,188 @@
+<div>
+<%= @html_contactsNav %>
+<div class="contactsCon">
+  <div style="margin:0 0 5px 22px; height:30px;">
+    <div style="float:left;">
+		  <button class="button_save" onclick="$this.addContact()">Save</button> 
+			<button onclick="$dir('/contact/home')">Discard</button> 
+    <% if !@contact.local_user_id %>
+      <button onclick="$this.inviteContactForm()">Invite</button> 
+    <% end %>
+		</div>
+    <div class="itododropdown editContact" style="margin:0px 0 0 2px; float:left;">
+      <ul>
+        <li><button type="button" class="itododropdown_outer">Groups <div class="contacts_btn_arw"></div></button><ul class="dropdown" style="margin-top:-2px;">
+          <div style="position:absolute; font-size:9px; margin:-6px 0 0 139px; width:12px; height:12px; overflow:hidden; background:url(<%= ITODO_CDN_HOST %>/images/a.gif) -35px -211px no-repeat; cursor:pointer;" onclick="ACTIVE_SUBMENU_HIDE();"></div>
+          <li class="first"><input class="" type="checkbox" id="g0" onclick="" checked readonly/><label for="g0">My Contacts</label></li>
+          <% @user.contact_groups.each {|g| %>
+          <li>
+            <input type="checkbox" id="g<%=h g.id %>" class="contact_groups" name="contact_groups[]" value="<%=h g.id %>"  />
+            <label for="g<%=h g.id %>"><%=h g.name %></label>
+          </li>
+          <% } %>
+        </ul></li>
+      </ul>
+    </div>
+  </div>
+	<div style="height:auto; overflow:hidden; ">
+	  <div class="fieldRow">
+      <div style="height:20px; overflow:hidden;">
+      </div>
+      <div class="fieldBorder" style="margin-right:5px;">
+        <div class="fieldLabel" style="position:absolute; margin-top:-25px">Firstname</div>
+        <input id="contact_firstname" name="firstname" class="noBorder autoWidth" style="min-width:60px; font:bold 20px arial; " type="text" value="<%=h @contact.firstname %>" />
+      </div>
+      <div class="fieldBorder">
+        <div class="fieldLabel" style="position:absolute; margin-top:-25px">Lastname</div>
+        <input id="contact_lastname" name="lastname" class="noBorder autoWidth" style="min-width:60px; font:bold 20px arial; " type="text" value="<%=h @contact.lastname %>" />
+      </div>
+			<input id="contact_local_user_id" name="local_user_id" type="hidden" value="<%= @contact.local_user_id %>" />
+	  </div>
+	  <div class="contactGroupsLabel">
+	    <div class="gn">
+	      <div style="float:left;">My Contacts</div>
+        <!--<div onclick="" class="clos"></div>-->
+	    </div>
+			<!--
+	    <div class="gn">
+	      <div style="float:left;">Friend</div>
+	      <div onclick="" class="clos"></div>
+	    </div>
+	    <div class="gn">
+	      <div style="float:left;">Colleague</div>
+	      <div onclick="" class="clos"></div>
+	    </div>
+			-->
+	  </div>
+	  <div class="fieldRow" style="float:right; margin-top:-105px; ">
+	    <div class="fieldLabel">Note</div>
+	    <div class="fieldBorder">
+	      <textarea class="noBorder" id="contact_field_note" style="width:380px; height:400px; " type="text"></textarea>
+	    </div>
+	  </div>
+	  <div id="contact_fields_con">
+	    <table>
+	      <tr _type="Email">
+	        <td class="fieldname">
+	          <div class="itododropdown" style="margin:5px 0 0 0;">
+	            <ul>
+	              <li><a href="javascript:void(0)" class="itododropdown_outer" _type="Email"><span>Email</span><div class="arwh"></div></a><ul class="dropdown">
+	                <li><a href="javascript:void(0)">Home</a></li>
+	                <li><a href="javascript:void(0)">Work</a></li>
+	                <li><a href="javascript:void(0)">Custom...</a></li>
+	              </ul></li>
+	            </ul>
+	          </div>
+	        </td>
+	        <td>
+	          <div class="fieldBorder">
+	            <input class="noBorder" name="emails[]" size="30" style="width:200px; " type="text" value="" />
+	          </div>
+	          <div class="del"></div>
+	        </td>
+	      </tr>
+	    </table>
+	    <table>
+	      <tr _type="Phone">
+	        <td class="fieldname">
+	          <div class="itododropdown" style="margin:5px 0 0 0;">
+	            <ul>
+	              <li><a href="javascript:void(0)" class="itododropdown_outer" _type="Phone"><span>Phone</span><div class="arwh"></div></a><ul class="dropdown">
+	                <li><a href="javascript:void(0)">Mobile</a></li>
+	                <li><a href="javascript:void(0)">Home</a></li>
+	                <li><a href="javascript:void(0)">Work</a></li>
+	                <li><a href="javascript:void(0)">Main</a></li>
+	                <li><a href="javascript:void(0)">Home Fax</a></li>
+	                <li><a href="javascript:void(0)">Work Fax</a></li>
+	                <li><a href="javascript:void(0)">Custom...</a></li>
+	              </ul></li>
+	            </ul>
+	          </div>
+	        </td>
+	        <td>
+	          <div class="fieldBorder">
+	            <input class="noBorder" name="phones[]" size="30" style="width:200px; " type="text" value="" />
+	          </div>
+	          <div class="del"></div>
+	        </td>
+	      </tr>
+	    </table>
+	    <table>
+	      <tr _type="Address">
+	        <td class="fieldname">
+	          <div class="itododropdown" style="margin:5px 0 0 0;">
+	            <ul>
+	              <li><a href="javascript:void(0)" class="itododropdown_outer" _type="Address"><span>Address</span><div class="arwh"></div></a><ul class="dropdown">
+	                <li><a href="javascript:void(0)">Home</a></li>
+	                <li><a href="javascript:void(0)">Work</a></li>
+	                <li><a href="javascript:void(0)">Custom...</a></li>
+	              </ul></li>
+	            </ul>
+	          </div>
+	        </td>
+	        <td>
+	          <div class="fieldBorder">
+	            <input class="noBorder" name="addresses[]" size="30" style="width:200px; " type="text" value="" />
+	          </div>
+	          <div class="del"></div>
+	        </td>
+	      </tr>
+	    </table>
+	    <table>
+	      <tr _type="Anniversary">
+	        <td class="fieldname">
+	          <div class="itododropdown" style="margin:5px 0 0 0;">
+	            <ul>
+	              <li><a href="javascript:void(0)" class="itododropdown_outer" _type="Anniversary"><span>Birthday</span><div class="arwh"></div></a><ul class="dropdown">
+	                <li><a href="javascript:void(0)">Anniversary</a></li>
+	                <li><a href="javascript:void(0)">Custom...</a></li>
+	              </ul></li>
+	            </ul>
+	          </div>
+	        </td>
+	        <td>
+	          <div class="fieldBorder">
+	            <input class="noBorder" name="dates[]" size="30" style="width:200px; " type="text" value="<%=h @contact.anniversary %>" />
+	          </div>
+	          <div class="del"></div>
+	        </td>
+	      </tr>
+        <% if @contact.anniversary %>
+        <tr class="add"><td></td><td><a href="javascript:void(0)" onclick="$this.addContactField(this, 'Anniversary')">Add anniversary</a></td></tr>
+        <% end %>
+	    </table>
+	    <table>
+	      <tr _type="URL">
+	        <td class="fieldname">
+	          <div class="itododropdown" style="margin:5px 0 0 0;">
+	            <ul>
+	              <li><a href="javascript:void(0)" class="itododropdown_outer" _type="URL"><span>URL</span><div class="arwh"></div></a><ul class="dropdown">
+	                <li><a href="javascript:void(0)">Profile</a></li>
+	                <li><a href="javascript:void(0)">Blog</a></li>
+	                <li><a href="javascript:void(0)">Home Page</a></li>
+	                <li><a href="javascript:void(0)">Work</a></li>
+	                <li><a href="javascript:void(0)">Custom...</a></li>
+	              </ul></li>
+	            </ul>
+	          </div>
+	        </td>
+	        <td>
+	          <div class="fieldBorder">
+	            <input class="noBorder" name="urls[]" size="30" style="width:200px; " type="text" value="<%=h @contact.url %>" />
+	          </div>
+	          <div class="del"></div>
+	        </td>
+	      </tr>
+        <% if @contact.url %>
+        <tr class="add"><td></td><td><a href="javascript:void(0)" onclick="$this.addContactField(this, 'URL')">Add url</a></td></tr>
+        <% end %>
+	    </table>
+	  </div>
+	</div>
+	  
+  <div style="margin:10px 0 10px 22px" class="contacts_edit_buttons">
+      <button class="button_save" onclick="$this.addContact()">Save</button> 
+			<button>Delete</button>
+  </div>
+</div>
+</div>

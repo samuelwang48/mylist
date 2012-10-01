@@ -1,0 +1,77 @@
+<div class="dtr dtr_quickview<%= todoitemEdit.is_finished ? ' finished' : ' notfinished'%><%= @todo.items.size == todoitemEdit_counter + 1 ? ' last' : '' %>">
+	<div class="dtd dtd_num"><%= todoitemEdit_counter + 1%></div>
+	<div class="dtd dtd_item" item_id="<%=todoitemEdit.id%>">
+		<div class="itm_toggler" onclick="$this.foldItem(this)">
+			<div></div>
+		</div>
+		<div class="itm_options">
+			<div class="handdrag"></div>
+			<% if @user_auth['w'] == true %>
+			 <input type="checkbox" id="item_<%=todoitemEdit.id %>_chk" value="<%=todoitemEdit.id %>" onclick="$this.checkItem(this)" <%= todoitemEdit.is_finished ? 'checked' : ''%> />
+			<% else %>
+			 <input disabled="true" type="checkbox" id="item_<%=todoitemEdit.id %>_chk" value="<%=todoitemEdit.id %>" onclick="$this.checkItem(this)" <%= todoitemEdit.is_finished ? 'checked' : ''%> />
+			<% end %>
+      
+	    
+      <% if @user_auth['w'] == true %>
+      <a href="javascript:void(0)" class="itemDone">
+      	<label for="item_<%=todoitemEdit.id %>_chk">
+      	 	 <span><%= todoitemEdit.is_finished ? 'Undo' : 'Done'%></span>
+        </label>
+			</a>
+			<a href="javascript:void(0)" class="itemDone" onclick="$this.insertItemBefore(this)">
+				<span>Insert</span>
+			</a>
+      <!--
+      <a href="javascript:void(0)" class="itemDone" onclick="javascript:void(0)">
+        <span>Extend</span>
+      </a>
+			-->
+      <a href="javascript:void(0)" class="itemDone" onclick="$this.deleteItem(this)">
+        <span>Delete</span>
+      </a>
+      &nbsp;&nbsp;
+      <a href="javascript:void(0)" class="itemDone itemDurationLink" 
+         id="itemDuration_<%= todoitemEdit.id %>" 
+         start="<%= todoitemEdit.start.strftime("%Y-%m-%d") unless todoitemEdit.start.blank? %>" 
+         due="<%= todoitemEdit.due.strftime("%Y-%m-%d") unless todoitemEdit.due.blank? %>"
+      >
+        <span>Duration</span>
+      </a>
+      &nbsp;&nbsp;
+      <a href="javascript:void(0)" class="itemDone itemPredecessorLink" 
+         id="itemPredecessor_<%= todoitemEdit.id %>" 
+         predecessor="<%= todoitemEdit.predecessor unless todoitemEdit.predecessor.blank? %>"
+      >
+        <span>Predecessor</span>
+      </a>
+			<% else %>
+      
+			<% end %>
+			<div class="iopt_created"><%=to_pretty(todoitemEdit.created_at) %></div>
+      <div class="iopt_reminder"<% if !todoitemEdit.has_reminder? %> style="display:none;"<%else%> title="<%= todoitemEdit.reminder.occurence.to_s.gsub(/[a-zA-Z]/,'') %>"<% end %>></div>
+      <div class="iopt_reminder_btn">
+        <% if todoitemEdit.has_reminder? %>
+        <script>var rd<%= todoitemEdit.reminder.id %> = <%= todoitemEdit.reminder.to_json %>;</script>
+        <a href="javascript:void(0)" class="itemDone modify_reminder" onclick="$this.popupReminder(this, rd<%= todoitemEdit.reminder.id %>); ">
+          <span>Reminder</span>
+        </a>
+        <% else %>
+        <a href="javascript:void(0)" class="itemDone modify_reminder" onclick="$this.popupReminder(this)">
+          <span>Reminder</span>
+        </a>
+        <% end %>
+      </div>
+		</div>
+		<% if @user_auth['w'] == true %>
+	  <div class="itm_description fieldBorder">
+      <div class="itm_ta"><input class="itm_val_con" type="hidden" id="items_<%=todoitemEdit.id %>_<%=todoitemEdit.sort %>" name="items[<%=todoitemEdit.id %>_<%=todoitemEdit.sort %>]" value="<%=h todoitemEdit.description %>"><%=h todoitemEdit.description %></div>
+		</div>
+		<% else %>
+    <div class="itm_description fieldNoBorder" readonly="1">
+      <div class="itm_ta"><%=h todoitemEdit.description %></div>
+    </div>
+		<% end %>
+	</div>
+  <div class="dtd dtd_pre"></div>
+</div>

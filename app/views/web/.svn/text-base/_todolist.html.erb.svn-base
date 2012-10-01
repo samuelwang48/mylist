@@ -1,0 +1,15 @@
+<tr>
+<td>
+	<% itm_totl = todolist.items.blank? ? 1 : todolist.items.size %>
+	<% percentage = (todolist.finished.size.to_f/itm_totl.to_f*10000).to_i/100 %>
+	<% barwidth = 60 %>
+	<div class="barcon" style="width:<%= barwidth %>px; " title="progress" todo="<%=todolist.id%>">
+		<div class="barin" style="width:<%= (percentage.to_f/100*barwidth).to_i %>px; "></div>
+		<div class="bartx"><%= percentage %>%</div>
+	</div>
+	<div class="listname"><a href="/todo/edit/<%= encode(todolist.id) %>">
+		<%=h todolist.name %>
+	</a></div>
+</td>
+<td class="created" valign="top"><%=to_pretty(todolist.modified_at) %></td>
+</tr>

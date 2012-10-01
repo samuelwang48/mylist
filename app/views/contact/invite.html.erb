@@ -1,0 +1,82 @@
+<div class="mainContainer">
+  <% if flash[:errors] %>
+  <div style="color:red">
+  <% flash[:errors].each_full {|v|%>
+   - <%= v %><br />
+  <%} %><br />
+  </div>
+  <% end %>
+
+    <h1>Invite People</h1>
+		<p>You have <%= @invite_limit-@user.invitations.size %> invitations left</p>
+    <div class="settings_con">
+      <div class="itodotabs">
+        <ul>
+          <li><a href="javascript:void(0)" class="current" _tab="email">Emails</a></li>
+          <!--<li><a href="javascript:void(0)" _tab="gmail">Gmail</a></li>
+          <li><a href="javascript:void(0)" _tab="hotmail">Hotmail</a></li>
+          <li><a href="javascript:void(0)" _tab="kaixin">开心网</a></li>-->
+        </ul>
+      </div>
+      <div class="itodotab_content" _for="email">
+        <p class="error">
+        
+        </p>
+      	<% if params[:id] %>
+        <p>Invite following contacts to join itodo.it</p>
+        <table>
+					<% @contacts.each{|c| %>
+					<tr>
+            <td width="70"></td>
+						<td>
+              <% if c.local_user_id == 0 %>
+							<input class="chkbox" type="checkbox" value="<%= encode(c.id) %>" checked />
+						  <% else %>
+              <input type="checkbox" disabled />
+							<% end %>
+						</td>
+					  <td>&nbsp;<%= c.firstname + ' ' + c.lastname %>&nbsp;&nbsp;</td>
+						<td>
+							<% if c.local_user_id > 0 %>
+							<div style="padding:2px 5px;">
+							already joined
+							</div>
+							<% else %>
+              <div class="fieldBorder"><input class="noBorder" autocomplete="off" type="input" value="<%=h c.fields_for('Email').size > 0 ? c.fields_for('Email')[0].value : '' %>"></div>
+							<% end %>
+						</td>
+					</tr>
+					<% } %>
+				</table>
+				<br />
+        <p>To invite other contacts, please separate their emails by comma ","</p>
+				<% else %>
+        <p>Invite multiple contacts by separating emails by comma ","</p>
+				<% end %>
+        <table>
+          <tr><td class="fieldWidth">Emails&nbsp;&nbsp;&nbsp;&nbsp;</td><td><div class="fieldBorder">
+          	<textarea class="noBorder" id="ta_invited_emails" name="email" style="width:300px; height:70px;"></textarea>
+					</div>
+					</td><td></td></tr>
+          <tr><td>&nbsp;</td><td></td><td></td></tr>
+          <tr><td>Add Notes&nbsp;&nbsp;&nbsp;&nbsp;</td><td><div class="fieldBorder"><textarea class="noBorder" style="width:300px; height:70px;">I've been using itodo.it and thought you might like to try it out. Here's an invitation to create an account.</textarea></div></td><td></td></tr>
+          
+        </table>
+		    <div style="padding:20px 0;">
+		      <button class="button_save" onclick="$this.sendInvitation()">Send Invitation</button> 
+		      <a href="javascript:void(0)" onclick="window.history.back(-1)">Cancel</a>
+		    </div>
+      </div>
+  
+      <div class="itodotab_content" _for="gmail" style="display:none;">
+      </div>
+      
+      <div class="itodotab_content" _for="hotmail" style="display:none;">
+      </div>
+      
+      <div class="itodotab_content" _for="kaixin" style="display:none;">
+      </div>
+    </div>
+</div>
+
+<div class="sideContainer"></div>

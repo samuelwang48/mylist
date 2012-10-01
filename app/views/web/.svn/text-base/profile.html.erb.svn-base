@@ -1,0 +1,84 @@
+
+<div class="mainContainer">
+  <div class="siteBlock profileblk">
+    <% if !User.is_contact?(session[:user_id], @user.id) %>
+    <div class="addContact" style="width:120px; height:30px;">
+      <form action="/contact/add_local" method="post">
+        <input name="authenticity_token" type="hidden" value=<%= form_authenticity_token.inspect %> />
+        <input type="hidden" name="user_id" class="user_id" value="<%= @user.id %>" />
+        <button><div style="background:url(<%= ITODO_CDN_HOST %>/images/a.gif) -18px -133px no-repeat"></div>Add to My Contacts</button>
+      </form>
+    </div>
+		<% else %>
+    <div class="addContact" style="width:120px; height:30px;">
+    </div>
+		<% end %>
+		<div class="profileInfo">
+		  <div class="avatar"><a href="javascript:;"><img src="<%=@user.avatar_url('large')%>"/></a></div>
+		  <div class="name"><%=h @user.firstname + ' ' + @user.lastname%></div>
+		  <div class="jobTitle"><%=h @user.position %></div>
+		  <div class="occupation"><%=h @user.occupation %></div>
+      <div class="url"><a href="<%=h @user.url %>"><%=h @user.url %></a></div>
+      <div class="bio"><%=h @user.bio %></div>
+      <input type="hidden" id="user_id" value="<%= encode @user.id %>" />
+		</div>
+  </div>
+
+<%= render :partial => "web/subnav" %>
+<% @todo_contacts_id = @user.contacts.collect{|i|i.local_user_id} %>
+  <div class="siteBlock tdlblk">
+<%= render :partial => "profile_tab_lists", :locals => {:lists => User.profile_more_lists(0, @user.id, session[:user_id])} %>
+  </div>
+  
+</div>
+<div class="sideContainer" id="sideContainer">
+	<div class="sideBlock">
+		<div style="margin:10px">
+			<% items_total = @user.items_total == 0 ? 1 : @user.items_total %>
+			<% open_items_total = @user.open_items_total %>
+			<% closed_items_total = @user.closed_items_total %>
+      <% tracking_total = @user.trackings.size %>
+      <% tracker_total = @user.trackers.size %>
+	    <% percentage = (closed_items_total.to_f/items_total.to_f*10000).to_i/100 %>
+	    <% barwidth = 270 %>
+	    <div class="barcon_overall" style="width:<%= barwidth %>px; " title="Busy-Level">
+	      <div class="barin_overall" style="width:<%= (percentage.to_f/100*barwidth).to_i %>px; "></div>
+	      <div class="bartx_overall"><%= percentage.to_s %>%</div>
+	    </div>
+			<div class="summary_row" style="border-top:none; margin-top:3px;">
+			  <div class="summary_item" style="border-left:none;"><div class="numbr"><%= @user.todos.size %></div> <div>Lists</div></div>
+			  <div class="summary_item"><div class="numbr"><%= items_total %></div> <div>Todos</div></div>
+			  <div class="summary_item"><div class="numbr"><%= open_items_total %></div> <div>Open</div></div>
+		    <div class="summary_item" style="border-right:none;"><div class="numbr"><%= closed_items_total %></div> <div>Closed</div></div>
+			</div>
+		  <div class="summary_row">
+	      <div class="summary_item" style="border-left:none;"><div class="numbr"><%= tracking_total %></div> <div>Tracking</div></div>
+	      <div class="summary_item" style="border-right:none;"><div class="numbr"><%= tracker_total %></div> <div>Trackers</div></div>
+			</div>
+      <!--<div class="summary_row" style="border-bottom:none"></div>-->
+		</div>
+	</div>
+  <div class="sideBlock sideBlock_tabs_large">
+    <div class="sideBlock_head">
+    	<div class="non_dropdown">
+    	<% connections = @user.connections %>
+      Connections (<%= connections.size %>)
+			</div>
+    </div>
+    <div style="margin:15px 10px;">
+      <% connections.each {|c| %>
+      <div class="contactItem">
+          <% if c.local.username.nil? || c.local.username == '' %>
+            <a href="/profile/<%=h encode(c.local.id) %>">
+          <% else %>
+            <a href="/profile/<%=h c.local.username %>">
+          <% end %>
+            <div class="avatar"></div>
+            <div class="name"><%=h c.firstname + ' ' + c.lastname %></div>
+          </a>
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+</div>

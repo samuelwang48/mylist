@@ -1,0 +1,46 @@
+8
+
+dir
+63
+svn://itodo.it/HEAD/service/SMS
+svn://itodo.it
+
+
+
+2011-02-25T15:17:17.064777Z
+2
+swang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+49bbca5f-451e-4e7f-97ed-f3b25e5ff87b
+
+META-INF
+dir
+
+WEB-INF
+dir
+
+index.jsp
+file
+
+
+
+
+2011-05-12T08:09:33.000000Z
+78b63c5ce8b78a534151eee6f74cfebf
+2011-02-25T15:17:17.064777Z
+2
+swang
+

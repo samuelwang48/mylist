@@ -1,0 +1,3 @@
+<script>
+  parent.loadAvatar('<%=AVATAR_URL+"/raw/"+image.id.to_s + ".jpg"%>');
+</script>

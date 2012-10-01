@@ -1,0 +1,22 @@
+<% if session[:user_id] %>
+<div class="subNav">
+	<ul>
+    <li class="single"><a href="javascript:void(0)" id="navlist" onclick="$this.loadLists(this)"<%=@list_selected%>>Lists</a></li>
+    <li class="single"><a href="javascript:void(0)" id="navtrackings" onclick="$this.loadTrackings(this)"<%=@tracking_selected%>>Trackings</a>
+		<% if @user.pending_trackings.size>0 && session[:user_id] == @user.id && params[:action]=='home' %>
+		<div class="pending">
+			<div><%= @user.pending_trackings.size %></div>
+		</div>
+		<% end %>
+		</li>
+	  <li><a href="javascript:void(0)" class="itododropdown_outer<%=@log_selected%>">Log<div class="arwh"></div></a><ul class="dropdown">
+      <li><a href="javascript:void(0)" onclick="$this.loadLogTimeline(this)">Timeline</a></li>
+      <li class="last"><a href="javascript:void(0)">Queue</a></li>
+		</ul></li>
+
+    <li class="single"><a href="javascript:void(0)" onclick="">Dashboard</a></li>
+    <!--<li><a href="javascript:void(0)">Tags<div class="arw"></div></a><ul class="dropdown"><li><a href="">Manage Tags</a><br /><br /><br /></li></ul></li>-->
+		<!--<li><a href="javascript:void(0)">Export<div class="arw"></div></a><ul class="dropdown"><li><a href="">Export Timesheet</a><br /><br /><br /></li></ul></li>-->
+	</ul>
+</div>
+<% end %>

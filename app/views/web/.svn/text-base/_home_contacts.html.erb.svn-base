@@ -1,0 +1,24 @@
+      <% c = home_contacts %>
+			<% cg = c.contact_groups.collect{|g|encode g.id} %>
+      <% if cookies[:GI].blank? %>
+      <div class="contactItem" _gid="<%= cg.join(',') %>">
+      <% else %>
+			  <% if cg.include?(cookies[:GI]) %>
+			  <div class="contactItem" _gid="<%= cg.join(',') %>">
+			  <% else %>
+				<div class="contactItem" _gid="<%= cg.join(',') %>" style="display:none;">
+				<% end %>
+			<% end %>
+        <% if c.local_user_id != 0 %>
+          <% if c.local.username.nil? || c.local.username == '' %>
+            <a href="/profile/<%=h encode(c.local.id) %>">
+          <% else %>
+            <a href="/profile/<%=h c.local.username %>">
+          <% end %>
+        <% else %>
+          <a class="nolink">
+        <% end %>
+            <div class="avatar"></div>
+            <div class="name"><%=h c.firstname + ' ' + c.lastname %></div>
+          </a>
+      </div>
